@@ -1,0 +1,289 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programmer Romance</title>
+  <style>
+    :root {
+      --bg-a: #0f172a;
+      --bg-b: #1e293b;
+      --card: rgba(15, 23, 42, 0.75);
+      --line: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #f43f5e;
+      --good: #34d399;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      background:
+        radial-gradient(circle at 15% 10%, #22d3ee20, transparent 32%),
+        radial-gradient(circle at 85% 85%, #f43f5e22, transparent 36%),
+        linear-gradient(145deg, var(--bg-a), var(--bg-b));
+      color: var(--text);
+      padding: 18px;
+    }
+
+    .panel {
+      width: min(760px, 96vw);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 20px 50px #02061799;
+      overflow: hidden;
+      animation: enter 700ms ease both;
+    }
+
+    .bar {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #0b1224;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #f87171; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #34d399; }
+
+    .path {
+      margin-left: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .content {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+      color: var(--accent);
+    }
+
+    .line {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 0.98rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .box {
+      border: 1px solid var(--line);
+      background: #0b1224bb;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .box .n {
+      display: block;
+      font-size: clamp(1.15rem, 3vw, 1.6rem);
+      color: var(--good);
+      font-weight: 700;
+    }
+
+    .box .t {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .quote {
+      border: 1px dashed #475569;
+      border-radius: 12px;
+      padding: 14px;
+      background: #0f172aaa;
+      min-height: 64px;
+      line-height: 1.7;
+      color: #f8fafc;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-quote {
+      background: var(--accent);
+      color: #082f49;
+    }
+
+    .btn-copy {
+      background: var(--accent-2);
+      color: #fff1f2;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="panel">
+    <div class="bar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="path">~/love/forever.sh</span>
+    </div>
+
+    <div class="content">
+      <h1 id="title">`Hello, 宝贝`</h1>
+      <p class="line" id="intro"></p>
+
+      <div class="grid" id="countdown">
+        <div class="box"><span class="n" id="days">0</span><span class="t">在一起天数</span></div>
+        <div class="box"><span class="n" id="next">0</span><span class="t">距下个纪念日(天)</span></div>
+        <div class="box"><span class="n" id="years">0</span><span class="t">已走过周年</span></div>
+      </div>
+
+      <div class="quote" id="quote">点击下方按钮，解锁今天的程序员情话。</div>
+
+      <div class="actions">
+        <button class="btn-quote" id="newQuote">生成情话</button>
+        <button class="btn-copy" id="copyLink">复制告白文案</button>
+      </div>
+
+      <p class="hint">想和你在一起好久好久</p>
+    </div>
+  </section>
+
+  <script>
+    const profile = {
+      myName: "廖炫旭",
+      herName: "陈欣怡",
+      anniversary: "2026-01-01"
+    };
+
+    const quotes = [
+      "你不是我的 bug，你是我每天都想维护的主功能。",
+      "如果人生是一次部署，你就是我唯一想上线到永远的版本。",
+      "我可以重构一万次代码，但喜欢你这件事一次就确定了。",
+      "别人看我像在敲键盘，只有我知道我在给你写未来。",
+      "你让我的世界从 404 变成 200 OK。",
+      "和你在一起后，我终于理解了什么叫高可用的幸福。",
+      "如果心动有日志，那每一行都写着你的名字。",
+      "我想和你做一个长期项目，截止日期是白头到老。"
+    ];
+
+    const title = document.getElementById("title");
+    const intro = document.getElementById("intro");
+    const daysEl = document.getElementById("days");
+    const nextEl = document.getElementById("next");
+    const yearsEl = document.getElementById("years");
+    const quoteEl = document.getElementById("quote");
+    const newQuoteBtn = document.getElementById("newQuote");
+    const copyBtn = document.getElementById("copyLink");
+
+    function parseDate(ymd) {
+      const [y, m, d] = ymd.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function daysBetween(a, b) {
+      const ms = 24 * 60 * 60 * 1000;
+      return Math.floor((b - a) / ms);
+    }
+
+    function updateProfile() {
+      const start = parseDate(profile.anniversary);
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      title.textContent = "`Hello, " + profile.herName + "`";
+      intro.textContent = profile.herName + "，从 " + profile.anniversary + " 到今天，我最稳定的依赖一直是你。";
+
+      const together = Math.max(0, daysBetween(start, today) + 1);
+      daysEl.textContent = String(together);
+
+      let yearCount = today.getFullYear() - start.getFullYear();
+      const hasNotReached =
+        today.getMonth() < start.getMonth() ||
+        (today.getMonth() === start.getMonth() && today.getDate() < start.getDate());
+      if (hasNotReached) yearCount -= 1;
+      yearsEl.textContent = String(Math.max(0, yearCount));
+
+      let nextAnn = new Date(today.getFullYear(), start.getMonth(), start.getDate());
+      if (nextAnn < today) nextAnn = new Date(today.getFullYear() + 1, start.getMonth(), start.getDate());
+      nextEl.textContent = String(daysBetween(today, nextAnn));
+    }
+
+    function randomQuote() {
+      const idx = Math.floor(Math.random() * quotes.length);
+      quoteEl.textContent = quotes[idx];
+    }
+
+    function copyMessage() {
+      const text =
+        "To " + profile.herName + "\n" +
+        "我们已经在一起 " + daysEl.textContent + " 天。\n" +
+        quoteEl.textContent + "\n" +
+        "from " + profile.myName;
+
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = "已复制";
+        setTimeout(() => {
+          copyBtn.textContent = "复制告白文案";
+        }, 1200);
+      }).catch(() => {
+        copyBtn.textContent = "复制失败";
+      });
+    }
+
+    updateProfile();
+    newQuoteBtn.addEventListener("click", randomQuote);
+    copyBtn.addEventListener("click", copyMessage);
+  </script>
+</body>
+</html>
