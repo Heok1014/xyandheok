@@ -1,7 +1,7 @@
 import { CATALOG, ORDERS, ACHIEVEMENTS, createWorld, normalizeWorld, advanceWorld, applyAction, getCropStatus, getLevel, getDailyTasks, serializeWorld, importWorld } from './engine.js?v=2';
 import { cloudConfig } from './config.js';
 import { WorldClient } from './client.js';
-import { ArcadeController } from './arcade.js';
+import { ArcadeController } from './arcade.js?v=2.1';
 import { playSound, toggleSound, soundEnabled } from './sound.js';
 
 const $ = id => document.getElementById(id);

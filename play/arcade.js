@@ -24,7 +24,7 @@ export class ArcadeController {
     $('game-again').addEventListener('click', () => this.start(this.game));
     $('arcade-dialog').addEventListener('cancel', event => { event.preventDefault(); this.exit(); });
     $('arcade-dialog').addEventListener('close', () => this.stop());
-    $('game-board').addEventListener('keydown', event => this.keyboard(event));
+    $('arcade-dialog').addEventListener('keydown', event => this.keyboard(event));
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && this.running && !this.finishing) this.tick();
     });
