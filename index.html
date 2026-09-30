@@ -1,289 +1,421 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Programmer Romance</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f3eb">
+  <meta name="description" content="每一个普通的日子，因为你而有了特别的意义。">
+  <title>写给陈欣怡的一封情书</title>
   <style>
     :root {
-      --bg-a: #0f172a;
-      --bg-b: #1e293b;
-      --card: rgba(15, 23, 42, 0.75);
-      --line: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #22d3ee;
-      --accent-2: #f43f5e;
-      --good: #34d399;
+      color-scheme: light;
+      --paper: #f7f3eb;
+      --ink: #173f35;
+      --green: #254d40;
+      --rose: #983e4f;
+      --muted: #63776d;
+      --line: #a2afa2;
+      --serif: "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", serif;
+      --mono: "Cascadia Code", "SFMono-Regular", "Consolas", monospace;
     }
-
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    html:has(dialog[open]) { overflow: hidden; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: "JetBrains Mono", "Consolas", monospace;
-      background:
-        radial-gradient(circle at 15% 10%, #22d3ee20, transparent 32%),
-        radial-gradient(circle at 85% 85%, #f43f5e22, transparent 36%),
-        linear-gradient(145deg, var(--bg-a), var(--bg-b));
-      color: var(--text);
-      padding: 18px;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image: linear-gradient(#71877909 1px, transparent 1px), linear-gradient(90deg, #71877909 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: var(--serif);
+      -webkit-font-smoothing: antialiased;
     }
-
-    .panel {
-      width: min(760px, 96vw);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--card);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 20px 50px #02061799;
-      overflow: hidden;
-      animation: enter 700ms ease both;
+    button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    button, a, textarea { outline-offset: 5px; }
+    :focus-visible { outline: 2px solid var(--rose); }
+    button:disabled { cursor: wait; opacity: .65; }
+    svg { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-library, [hidden] { display: none !important; }
+    .page { max-width: 1440px; margin: auto; padding: 0 7%; background: radial-gradient(ellipse at center, var(--paper) 45%, #f7f3eb66 100%); }
+    header { height: 66px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); gap: 20px; }
+    .brand { font: 16px var(--mono); display: inline-flex; align-items: center; gap: 22px; text-decoration: none; }
+    .brand svg { color: var(--rose); }
+    nav { display: flex; align-items: center; gap: 40px; font-size: 16px; }
+    nav a { text-decoration: none; padding: 10px 0; }
+    nav a:hover { color: var(--rose); }
+    .hero { padding: 45px 30px 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    h1 { font-size: clamp(38px, 5.05vw, 73px); line-height: 1.25; font-weight: 700; letter-spacing: -.06em; margin: 0; }
+    h1 span { display: block; }
+    .hello { font-size: clamp(26px, 2.6vw, 38px); font-style: italic; line-height: 1.5; margin: 12px 0 14px; }
+    .intro { margin: 0; font-size: clamp(17px, 1.55vw, 22px); line-height: 1.8; }
+    .hero-actions { display: flex; align-items: center; gap: 34px; margin-top: 26px; flex-wrap: wrap; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 48px; padding: 12px 26px; border: 1px solid var(--green); border-radius: 99px; background: transparent; color: var(--ink); font-size: 17px; line-height: 1.4; text-decoration: none; }
+    .primary { color: var(--paper); background: var(--green); box-shadow: 0 4px 12px #173f3512; }
+    .primary:hover { background: var(--ink); }
+    .text-link { border: 0; background: none; padding: 10px 0 5px; border-bottom: 1px solid var(--line); font-size: 17px; text-decoration: none; }
+    .text-link:hover { color: var(--rose); border-color: var(--rose); }
+    .terminal { transform: rotate(2deg); border: 1px solid #a7aa95; border-radius: 5px; background: #fbf9f2; box-shadow: 0 14px 24px #39352412; min-width: 0; }
+    .terminal-bar { position: relative; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 16px; border-bottom: 1px solid #b0b1a540; background: #eeede3; font: 13px var(--mono); }
+    .lights { position: absolute; left: 18px; display: flex; gap: 7px; }
+    .lights i { width: 10px; height: 10px; border-radius: 50%; background: #a7a68f; }
+    .lights i:first-child { background: var(--rose); }
+    .code { counter-reset: code-line; margin: 0; padding: 22px 0; font: clamp(12px, 1.15vw, 16px)/2.25 var(--mono); }
+    .code-line { display: flex; counter-increment: code-line; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .code-line::before { content: counter(code-line); color: #8a958a; font-size: .85em; width: 52px; padding-right: 18px; flex-shrink: 0; text-align: right; border-right: 1px solid #b0b1a529; margin-right: 20px; }
+    .code-line > span { padding-right: 14px; }
+    .keyword, .string { color: var(--rose); }
+    .days { display: grid; grid-template-columns: 1fr 1.4fr 1fr; align-items: center; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 24px 0; text-align: center; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .number { font-family: Georgia, "Times New Roman", serif; font-size: 46px; line-height: 1.15; color: var(--rose); font-variant-numeric: tabular-nums; }
+    .stat p { margin: 12px 0 0; font-size: 17px; }
+    .clock { display: flex; gap: 12px; justify-content: center; align-items: baseline; white-space: nowrap; }
+    .clock span { min-width: 1.18em; }
+    .clock b { font: inherit; }
+    .clock span:first-child { min-width: 1.8em; }
+    .quote-section { text-align: center; padding: 32px 0 26px; }
+    .quote-label { color: var(--muted); font-size: 15px; letter-spacing: .25em; margin: 0 0 16px; }
+    .quote-label span { color: var(--rose); margin: 0 18px; font-family: var(--mono); letter-spacing: 0; }
+    blockquote { font-size: clamp(23px, 2.45vw, 35px); line-height: 1.6; margin: 0 auto; max-width: 760px; min-height: 100px; white-space: pre-line; font-weight: 700; overflow-wrap: anywhere; }
+    .quote-actions { display: flex; align-items: center; justify-content: center; gap: 38px; margin-top: 16px; }
+    .quote-actions .button { min-height: 44px; padding: 8px 24px; font-size: 16px; }
+    .copy { display: inline-flex; gap: 12px; align-items: center; background: none; color: var(--green); border: 0; padding: 12px 0; font-size: 16px; }
+    .copy:hover { color: var(--rose); }
+    footer { border-top: 1px solid var(--line); display: flex; gap: 24px; justify-content: space-between; padding: 18px 0 26px; font-size: 14px; line-height: 1.8; }
+    footer p { margin: 0; }
+    .toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--green); color: var(--paper); border-radius: 10px; padding: 12px 20px; max-width: calc(100vw - 32px); width: max-content; font: 15px/1.6 var(--serif); box-shadow: 0 6px 25px #173f3525; z-index: 5; }
+    dialog { border: 1px solid var(--line); color: var(--ink); background: var(--paper); width: min(600px, calc(100% - 32px)); max-height: calc(100dvh - 48px); padding: 42px; border-radius: 8px; box-shadow: 0 30px 100px #142d3540; overflow-y: auto; }
+    dialog::backdrop { background: #172c285f; backdrop-filter: blur(5px); }
+    .dialog-close { position: absolute; top: 12px; right: 12px; border: 0; width: 44px; height: 44px; background: none; color: var(--ink); display: grid; place-items: center; }
+    .letter-heading { font: italic 24px Georgia, var(--serif); color: var(--rose); margin: 0 0 24px; }
+    .letter-body { font-size: 18px; line-height: 2; white-space: pre-line; }
+    .signature { text-align: right; margin: 30px 0 0; font-size: 18px; line-height: 1.8; }
+    .letter-code { font: 12px/1.8 var(--mono); color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; margin-top: 24px; }
+    .manual-copy h2 { font-size: 22px; margin-top: 0; }
+    .manual-copy p { font-size: 16px; line-height: 1.8; }
+    textarea { width: 100%; min-height: 180px; color: var(--ink); background: #fffdf8; border: 1px solid var(--line); padding: 16px; border-radius: 4px; font-size: 16px; line-height: 1.8; resize: vertical; }
+    .reveal { animation: arrive .7s ease-out both; }
+    .terminal.reveal { animation-name: card-arrive; animation-delay: .12s; }
+    .quote-change { animation: quote-arrive .25s ease-out both; }
+    @keyframes arrive { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes card-arrive { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes quote-arrive { from { opacity: .2; translate: 0 4px; } to { opacity: 1; translate: 0 0; } }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (min-width: 1500px) { h1 { font-size: 73px; } }
+    @media (max-width: 1100px) {
+      .hero { padding-left: 8px; padding-right: 8px; gap: 34px; }
+      .hero-actions { gap: 20px; }
+      .clock { gap: 6px; }
+      .number { font-size: 38px; }
+      .code-line::before { width: 32px; padding-right: 10px; margin-right: 12px; }
+      .terminal-bar { font-size: 12px; }
     }
-
-    .bar {
-      height: 42px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--line);
-      background: #0b1224;
+    @media (max-width: 760px) {
+      .page { padding: 0 6%; }
+      header { height: 66px; }
+      .brand { font-size: 13px; gap: 12px; }
+      nav { gap: 16px; font-size: 13px; }
+      .hero { grid-template-columns: 1fr; padding: 34px 0 30px; gap: 32px; }
+      h1 { font-size: clamp(32px, 8.8vw, 58px); letter-spacing: -.035em; }
+      .hello { font-size: 28px; margin-top: 12px; }
+      .intro { font-size: 17px; }
+      .hero-actions { gap: 22px; margin-top: 22px; }
+      .button, .text-link { font-size: 16px; }
+      .hero-actions .primary { padding: 12px 20px; gap: 12px; }
+      .terminal { transform: rotate(1deg); margin: 4px 3px 4px; }
+      .code { font-size: clamp(12px, 3.2vw, 17px); padding: 14px 0; }
+      .code-line::before { width: 30px; padding-right: 9px; margin-right: 12px; }
+      .terminal-bar { padding: 13px; font-size: 12px; }
+      .days { grid-template-columns: 1fr 1fr; padding: 20px 0; row-gap: 20px; }
+      .stat-countdown { grid-column: 1 / -1; grid-row: 2; border-left: 0 !important; border-top: 1px solid #a2afa255; padding-top: 20px; }
+      .stat-years { grid-column: 2; grid-row: 1; }
+      .number { font-size: 38px; }
+      .clock { gap: 10px; font-size: clamp(30px, 9.5vw, 44px); }
+      .stat p { font-size: 14px; margin-top: 10px; }
+      .quote-section { padding-top: 30px; padding-bottom: 24px; }
+      .quote-label { font-size: 13px; }
+      blockquote { font-size: 24px; min-height: 115px; }
+      .quote-actions { gap: 26px; }
+      footer { flex-direction: column; gap: 4px; font-size: 13px; padding-bottom: max(26px, env(safe-area-inset-bottom)); }
+      dialog { padding: 40px 24px 28px; }
+      .letter-body { font-size: 17px; }
     }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    .dot.red { background: #f87171; }
-    .dot.yellow { background: #fbbf24; }
-    .dot.green { background: #34d399; }
-
-    .path {
-      margin-left: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .content {
-      padding: 22px;
-      display: grid;
-      gap: 14px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
-      color: var(--accent);
-    }
-
-    .line {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.75;
-      font-size: 0.98rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .box {
-      border: 1px solid var(--line);
-      background: #0b1224bb;
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .box .n {
-      display: block;
-      font-size: clamp(1.15rem, 3vw, 1.6rem);
-      color: var(--good);
-      font-weight: 700;
-    }
-
-    .box .t {
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    .quote {
-      border: 1px dashed #475569;
-      border-radius: 12px;
-      padding: 14px;
-      background: #0f172aaa;
-      min-height: 64px;
-      line-height: 1.7;
-      color: #f8fafc;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      transition: transform 160ms ease, opacity 160ms ease;
-    }
-
-    button:hover { transform: translateY(-1px); }
-
-    .btn-quote {
-      background: var(--accent);
-      color: #082f49;
-    }
-
-    .btn-copy {
-      background: var(--accent-2);
-      color: #fff1f2;
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    @keyframes enter {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @media (max-width: 640px) {
-      .grid { grid-template-columns: 1fr; }
-      .content { padding: 16px; }
-    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
   </style>
 </head>
 <body>
-  <section class="panel">
-    <div class="bar">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
-      <span class="path">~/love/forever.sh</span>
-    </div>
-
-    <div class="content">
-      <h1 id="title">`Hello, 宝贝`</h1>
-      <p class="line" id="intro"></p>
-
-      <div class="grid" id="countdown">
-        <div class="box"><span class="n" id="days">0</span><span class="t">在一起天数</span></div>
-        <div class="box"><span class="n" id="next">0</span><span class="t">距下个纪念日(天)</span></div>
-        <div class="box"><span class="n" id="years">0</span><span class="t">已走过周年</span></div>
-      </div>
-
-      <div class="quote" id="quote">点击下方按钮，解锁今天的程序员情话。</div>
-
-      <div class="actions">
-        <button class="btn-quote" id="newQuote">生成情话</button>
-        <button class="btn-copy" id="copyLink">复制告白文案</button>
-      </div>
-
-      <p class="hint">想和你在一起好久好久</p>
-    </div>
-  </section>
-
+  <svg class="icon-library" aria-hidden="true"><defs>
+    <symbol id="heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 6.1a8.4 8.4 0 0 1 13.6 3M4.3 14.9a8.4 8.4 0 0 0 13.6 3"/></symbol>
+    <symbol id="copy-icon" viewBox="0 0 24 24"><rect x="9" y="3" width="12" height="14" rx="2"/><path d="M15 17v4H3V7h6"/></symbol>
+    <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  </defs></svg>
+  <div class="page">
+    <header>
+      <a class="brand" href="#home" aria-label="回到首页">you &amp; me <svg aria-hidden="true"><use href="#heart"/></svg></a>
+      <nav aria-label="页面导航"><a href="./play/">我们的小天地</a><a href="#letter" id="letter-nav">写给你的信</a></nav>
+    </header>
+    <main id="home">
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="reveal">
+          <h1 id="hero-heading"><span>我的世界，</span><span>因为你而不同。</span></h1>
+          <p class="hello" id="hello">Hello, 陈欣怡.</p>
+          <p class="intro">从 <span id="since-text">2026 年 1 月 1 日</span>起，<br>每一个普通的日子，都有了特别的意义。</p>
+          <div class="hero-actions">
+            <button class="button primary" id="open-letter" aria-haspopup="dialog">打开写给你的信<svg aria-hidden="true"><use href="#arrow"/></svg></button>
+            <a class="text-link" href="#love-quote">收下一句情话</a>
+          </div>
+        </div>
+        <div class="terminal reveal" aria-label="写着我们名字的代码">
+          <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>~/love/forever.js</div>
+          <div class="code" aria-hidden="true">
+            <div class="code-line"><span><b class="keyword">const</b> us = {</span></div>
+            <div class="code-line"><span>  me: <span class="string" id="code-me">"廖炫旭"</span>,</span></div>
+            <div class="code-line"><span>  you: <span class="string" id="code-you">"陈欣怡"</span>,</span></div>
+            <div class="code-line"><span>  since: <span class="string" id="code-since">"2026-01-01"</span>,</span></div>
+            <div class="code-line"><span>  promise: <span class="string">"想和你在一起好久好久"</span></span></div>
+            <div class="code-line"><span>};</span></div>
+            <div class="code-line"><span>&nbsp;</span></div>
+            <div class="code-line"><span><b class="keyword">return</b> love.everyDay();</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="days" id="our-days" aria-label="我们的纪念日">
+        <div class="stat"><div class="number" id="together-days">273</div><p id="together-label">在一起的第 273 天</p></div>
+        <div class="stat stat-countdown">
+          <div class="number clock" role="timer" aria-label="纪念日倒计时" aria-live="off"><span id="count-days">093</span><b>:</b><span id="count-hours">00</span><b>:</b><span id="count-minutes">00</span><b>:</b><span id="count-seconds">00</span></div>
+          <p id="count-caption">距离下一次纪念日 · 2027.01.01</p>
+          <span class="sr-only">倒计时依次为天、小时、分钟、秒，按马来西亚时间计算。</span>
+        </div>
+        <div class="stat stat-years"><div class="number" id="together-years">0</div><p>已经走过的周年</p></div>
+      </section>
+      <section class="quote-section" id="love-quote" aria-labelledby="quote-heading">
+        <h2 class="quote-label" id="quote-heading"><span aria-hidden="true">{</span>今天也想对你说<span aria-hidden="true">}</span></h2>
+        <blockquote id="quote" aria-live="polite" aria-atomic="true">我想和你做一个长期项目，
+截止日期是白头到老。</blockquote>
+        <div class="quote-actions">
+          <button class="button" id="new-quote">再来一句<svg aria-hidden="true"><use href="#refresh"/></svg></button>
+          <button class="copy" id="copy-quote">复制情话<svg aria-hidden="true"><use href="#copy-icon"/></svg></button>
+        </div>
+      </section>
+    </main>
+    <footer><p>想和你在一起好久好久</p><p id="footer-signature">廖炫旭 写给 陈欣怡</p></footer>
+  </div>
+  <dialog id="letter" aria-labelledby="letter-title">
+    <button class="dialog-close" data-close="letter" aria-label="关闭情书"><svg aria-hidden="true"><use href="#close"/></svg></button>
+    <h2 class="letter-heading" id="letter-title">To 陈欣怡,</h2>
+    <div class="letter-body" id="letter-body"></div>
+    <p class="signature">想和你在一起好久好久<br><span id="letter-signature">廖炫旭</span></p>
+    <p class="letter-code">const love = () =&gt; chooseYouEveryDay();</p>
+  </dialog>
+  <dialog class="manual-copy" id="manual-copy" aria-labelledby="copy-title">
+    <button class="dialog-close" data-close="manual-copy" aria-label="关闭复制窗口"><svg aria-hidden="true"><use href="#close"/></svg></button>
+    <h2 id="copy-title">把这句话带走</h2>
+    <p>浏览器暂时无法自动复制。长按下面的文字，选择「全选」和「复制」即可。</p>
+    <textarea id="copy-text" readonly aria-label="要复制的情话"></textarea>
+  </dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p style="padding: 20px; text-align: center">请启用浏览器 JavaScript，让纪念日倒计时和情话按钮陪你一起运行。</p></noscript>
   <script>
+    // Edit these three values to personalize the page. Keep the date as YYYY-MM-DD.
     const profile = {
       myName: "廖炫旭",
       herName: "陈欣怡",
       anniversary: "2026-01-01"
     };
 
-    const quotes = [
-      "你不是我的 bug，你是我每天都想维护的主功能。",
-      "如果人生是一次部署，你就是我唯一想上线到永远的版本。",
-      "我可以重构一万次代码，但喜欢你这件事一次就确定了。",
-      "别人看我像在敲键盘，只有我知道我在给你写未来。",
-      "你让我的世界从 404 变成 200 OK。",
-      "和你在一起后，我终于理解了什么叫高可用的幸福。",
-      "如果心动有日志，那每一行都写着你的名字。",
-      "我想和你做一个长期项目，截止日期是白头到老。"
+    const loveQuotes = [
+      "我想和你做一个长期项目，\n截止日期是白头到老。",
+      "如果心动有日志，\n那每一行都写着你的名字。",
+      "我可以重构一万次代码，\n但喜欢你这件事，一次就确定了。",
+      "世界偶尔会出现 404，\n但你一直是我想回去的首页。",
+      "想把每一个平凡的明天，\n都写进有你的未来里。",
+      "你不需要读懂我的代码，\n只需要知道，我的偏爱都给了你。",
+      "程序有结束的时候，\n想念你却没有终止条件。",
+      "我的未来不需要太复杂，\n有你，有我，有慢慢变老的日子。",
+      "如果人生有默认选项，\n我想把你设为每一天。",
+      "最想和你一起调试的，\n是往后每一个柴米油盐的日子。",
+      "你让我的世界从 404，\n变成了 200 OK。",
+      "我的喜欢不是随机数，\n每一次运行，结果都是你。"
     ];
 
-    const title = document.getElementById("title");
-    const intro = document.getElementById("intro");
-    const daysEl = document.getElementById("days");
-    const nextEl = document.getElementById("next");
-    const yearsEl = document.getElementById("years");
-    const quoteEl = document.getElementById("quote");
-    const newQuoteBtn = document.getElementById("newQuote");
-    const copyBtn = document.getElementById("copyLink");
+    const DAY_MS = 86400000;
+    const KL_OFFSET_MS = 8 * 3600000;
+    const klFormatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kuala_Lumpur", year: "numeric", month: "2-digit", day: "2-digit"
+    });
 
-    function parseDate(ymd) {
-      const [y, m, d] = ymd.split("-").map(Number);
-      return new Date(y, m - 1, d);
+    function parseYmd(value) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+      if (!match) throw new Error("Anniversary must use YYYY-MM-DD.");
+      const [, year, month, day] = match.map(Number);
+      const stamp = new Date(Date.UTC(year, month - 1, day));
+      if (year < 1900 || stamp.getUTCFullYear() !== year || stamp.getUTCMonth() !== month - 1 || stamp.getUTCDate() !== day) {
+        throw new Error("Anniversary is not a valid date.");
+      }
+      return { year, month, day };
     }
 
-    function daysBetween(a, b) {
-      const ms = 24 * 60 * 60 * 1000;
-      return Math.floor((b - a) / ms);
+    function dateOrdinal(date) {
+      // UTC ordinals measure calendar days without the visitor's timezone or DST.
+      return Date.UTC(date.year, date.month - 1, date.day) / DAY_MS;
     }
 
-    function updateProfile() {
-      const start = parseDate(profile.anniversary);
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-      title.textContent = "`Hello, " + profile.herName + "`";
-      intro.textContent = profile.herName + "，从 " + profile.anniversary + " 到今天，我最稳定的依赖一直是你。";
-
-      const together = Math.max(0, daysBetween(start, today) + 1);
-      daysEl.textContent = String(together);
-
-      let yearCount = today.getFullYear() - start.getFullYear();
-      const hasNotReached =
-        today.getMonth() < start.getMonth() ||
-        (today.getMonth() === start.getMonth() && today.getDate() < start.getDate());
-      if (hasNotReached) yearCount -= 1;
-      yearsEl.textContent = String(Math.max(0, yearCount));
-
-      let nextAnn = new Date(today.getFullYear(), start.getMonth(), start.getDate());
-      if (nextAnn < today) nextAnn = new Date(today.getFullYear() + 1, start.getMonth(), start.getDate());
-      nextEl.textContent = String(daysBetween(today, nextAnn));
+    function anniversaryInYear(start, year) {
+      // A February 29 anniversary is celebrated on February 28 in non-leap years.
+      const lastDay = new Date(Date.UTC(year, start.month, 0)).getUTCDate();
+      return { year, month: start.month, day: Math.min(start.day, lastDay) };
     }
 
-    function randomQuote() {
-      const idx = Math.floor(Math.random() * quotes.length);
-      quoteEl.textContent = quotes[idx];
+    function dateLabel(date) {
+      return `${date.year}.${String(date.month).padStart(2, "0")}.${String(date.day).padStart(2, "0")}`;
     }
 
-    function copyMessage() {
-      const text =
-        "To " + profile.herName + "\n" +
-        "我们已经在一起 " + daysEl.textContent + " 天。\n" +
-        quoteEl.textContent + "\n" +
-        "from " + profile.myName;
+    function getLoveState(startValue, now = new Date()) {
+      const start = parseYmd(startValue);
+      const parts = Object.fromEntries(klFormatter.formatToParts(now).map(part => [part.type, part.value]));
+      const today = { year: Number(parts.year), month: Number(parts.month), day: Number(parts.day) };
+      const day = dateOrdinal(today);
+      const first = dateOrdinal(start);
+      const upcomingStart = day < first;
+      let target = upcomingStart ? start : anniversaryInYear(start, today.year);
+      const isAnniversary = !upcomingStart && day === dateOrdinal(target);
+      let years = upcomingStart ? 0 : today.year - start.year;
+      if (!upcomingStart && day < dateOrdinal(target)) years -= 1;
+      if (!upcomingStart && day > dateOrdinal(target)) target = anniversaryInYear(start, today.year + 1);
+      // Malaysia is UTC+08:00, so the shared countdown ends at midnight there.
+      const targetMs = dateOrdinal(target) * DAY_MS - KL_OFFSET_MS;
+      const remaining = isAnniversary ? 0 : Math.max(0, Math.ceil((targetMs - now.getTime()) / 1000));
+      return {
+        together: upcomingStart ? 0 : day - first + 1,
+        years: Math.max(0, years), target, isAnniversary, upcomingStart,
+        countdown: {
+          days: Math.floor(remaining / 86400), hours: Math.floor(remaining % 86400 / 3600),
+          minutes: Math.floor(remaining % 3600 / 60), seconds: remaining % 60
+        }
+      };
+    }
 
-      navigator.clipboard.writeText(text).then(() => {
-        copyBtn.textContent = "已复制";
-        setTimeout(() => {
-          copyBtn.textContent = "复制告白文案";
-        }, 1200);
-      }).catch(() => {
-        copyBtn.textContent = "复制失败";
+    function chooseNextIndex(length, current, random = Math.random) {
+      if (length <= 1) return 0;
+      const candidate = Math.floor(random() * (length - 1));
+      return candidate >= current ? candidate + 1 : candidate;
+    }
+
+    function initPage() {
+      const el = id => document.getElementById(id);
+      const letter = el("letter");
+      const manualCopy = el("manual-copy");
+      const start = parseYmd(profile.anniversary);
+      let quoteIndex = 0;
+      let toastTimer;
+      let previousLabel = "";
+
+      document.title = `写给${profile.herName}的一封情书`;
+      el("hello").textContent = `Hello, ${profile.herName}.`;
+      el("since-text").textContent = `${start.year} 年 ${start.month} 月 ${start.day} 日`;
+      el("code-me").textContent = JSON.stringify(profile.myName);
+      el("code-you").textContent = JSON.stringify(profile.herName);
+      el("code-since").textContent = JSON.stringify(profile.anniversary);
+      el("footer-signature").textContent = `${profile.myName} 写给 ${profile.herName}`;
+      el("letter-title").textContent = `To ${profile.herName},`;
+      el("letter-signature").textContent = profile.myName;
+      el("letter-body").textContent = `有些话，写进代码里太短，放在心里又太满。所以，我想认真写给你。\n\n我不一定能把每一天都过得很精彩，但我想让你知道：在每一个普通的日子里，你都是我最特别的那个人。\n\n比起漂亮的承诺，我更想慢慢学会听你说话、记住你的喜欢，在你需要的时候，好好陪着你。\n\n以后的生活也许会有小小的 bug，但我想和你一起耐心解决。不会因为一时的困难，就放弃我们这个项目。\n\n如果未来是一段还没写完的程序，我希望往后的每一行，都有你。`;
+
+      function updateClock() {
+        const state = getLoveState(profile.anniversary);
+        el("together-days").textContent = String(state.together);
+        el("together-label").textContent = state.upcomingStart ? "期待我们的第一天" : `在一起的第 ${state.together} 天`;
+        el("together-years").textContent = String(state.years);
+        for (const [key, value] of Object.entries(state.countdown)) {
+          el(`count-${key}`).textContent = String(value).padStart(key === "days" ? 3 : 2, "0");
+        }
+        const caption = state.isAnniversary
+          ? (state.years > 0 ? `今天是我们的 ${state.years} 周年纪念日` : "今天，是我们的第一天")
+          : `${state.upcomingStart ? "距离我们的开始" : "距离下一次纪念日"} · ${dateLabel(state.target)}`;
+        el("count-caption").textContent = caption;
+        if (caption !== previousLabel) {
+          previousLabel = caption;
+          el("count-caption").setAttribute("aria-live", "polite");
+        }
+      }
+
+      function notify(message) {
+        clearTimeout(toastTimer);
+        el("toast").textContent = message;
+        el("toast").hidden = false;
+        toastTimer = setTimeout(() => { el("toast").hidden = true; }, 2600);
+      }
+
+      function openLetter(event) {
+        if (event) event.preventDefault();
+        if (!letter.open) letter.showModal();
+      }
+
+      el("open-letter").addEventListener("click", openLetter);
+      el("letter-nav").addEventListener("click", openLetter);
+      for (const button of document.querySelectorAll("[data-close]")) {
+        button.addEventListener("click", () => el(button.dataset.close).close());
+      }
+      for (const dialog of [letter, manualCopy]) {
+        dialog.addEventListener("click", event => {
+          const rect = dialog.getBoundingClientRect();
+          if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
+            dialog.close();
+          }
+        });
+      }
+
+      el("new-quote").addEventListener("click", () => {
+        quoteIndex = chooseNextIndex(loveQuotes.length, quoteIndex);
+        el("quote").textContent = loveQuotes[quoteIndex];
+        el("quote").classList.remove("quote-change");
+        void el("quote").offsetWidth;
+        el("quote").classList.add("quote-change");
       });
+
+      el("copy-quote").addEventListener("click", async () => {
+        updateClock();
+        const state = getLoveState(profile.anniversary);
+        const progress = state.upcomingStart ? "期待我们的第一天。" : `我们已经在一起 ${state.together} 天。`;
+        const text = `To ${profile.herName}\n${progress}\n\n${loveQuotes[quoteIndex]}\n\nFrom ${profile.myName}`;
+        const button = el("copy-quote");
+        button.disabled = true;
+        try {
+          if (!navigator.clipboard || !window.isSecureContext) throw new Error("Clipboard unavailable.");
+          await navigator.clipboard.writeText(text);
+          notify("已复制，把这句心里话送给她吧。");
+        } catch {
+          el("copy-text").value = text;
+          manualCopy.showModal();
+          el("copy-text").focus();
+          el("copy-text").select();
+          el("copy-text").setSelectionRange(0, text.length);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      updateClock();
+      let clockTimer = setInterval(updateClock, 1000);
+      document.addEventListener("visibilitychange", () => {
+        clearInterval(clockTimer);
+        if (!document.hidden) { updateClock(); clockTimer = setInterval(updateClock, 1000); }
+      });
+      if (window.location.hash === "#letter") openLetter();
+      window.addEventListener("hashchange", () => { if (window.location.hash === "#letter") openLetter(); });
     }
 
-    updateProfile();
-    newQuoteBtn.addEventListener("click", randomQuote);
-    copyBtn.addEventListener("click", copyMessage);
+    if (typeof document !== "undefined") {
+      try { initPage(); }
+      catch (error) {
+        document.getElementById("count-caption").textContent = "纪念日格式有误，请使用有效的 YYYY-MM-DD 日期。";
+        console.error(error);
+      }
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f3eb">
+  <meta name="description" content="一只小猫，一片菜园，一个慢慢变好的家。属于我们的双人小天地。">
+  <meta name="referrer" content="no-referrer">
+  <title>我们的小日子 · 廖炫旭与陈欣怡</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true"><defs>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 3C9 2 2 9 6 16s15 3 14-13ZM5 20 17 7"/></symbol>
+    <symbol id="i-sofa" viewBox="0 0 24 24"><path d="M5 12V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M5 12a2 2 0 0 0-4 0v7h22v-7a2 2 0 0 0-4 0v4H5Zm-2 7v2m18-2v2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 3a9 9 0 1 0 11 12Z"/></symbol>
+    <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3 10h18l-2 10H5ZM9 8V5m6 3V5M2 20h20"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 6c0 8 10 4 10 12M5 16c7-8 11-3 14-11"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M5 19a4 4 0 0 1-1-8 7 7 0 0 1 13-3 5.5 5.5 0 1 1 1.5 11Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-water" viewBox="0 0 24 24"><path d="M12 3s-7 8-7 12a7 7 0 0 0 14 0c0-4-7-12-7-12ZM8 15a4 4 0 0 0 4 4"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M3 3c4 0 7 0 9 2 2-2 5-2 9-2v16c-4 0-7 0-9 2-2-2-5-2-9-2Z"/></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 8H9v4h6v4H9m3-10v12"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path d="M3 10h18v4H3Zm2 4v7h14v-7M12 10v11M12 10c-8-2-6-8-2-5l2 5c8-2 6-8 2-5Z"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <header class="topbar">
+      <a href="./" class="brand"><svg><use href="#i-heart"/></svg><span>我们的小日子</span></a>
+      <div class="topbar-right"><span class="couple">廖炫旭 <i>&amp;</i> 陈欣怡</span><a href="../index.html" class="letter-link"><svg><use href="#i-book"/></svg>回到情书</a></div>
+    </header>
+    <main>
+      <section class="welcome" aria-labelledby="welcome-title">
+        <div><h1 id="welcome-title">把平凡的日子，养成喜欢的样子。</h1><p>一只小猫，一片菜园，一个慢慢变好的家。</p></div>
+        <div class="welcome-note"><svg><use href="#i-heart"/></svg><span>不用很厉害，<br>一起慢慢来就好。</span></div>
+      </section>
+      <div class="world-toolbar">
+        <div class="tabs" role="tablist" aria-label="选择小游戏">
+          <button id="tab-pet" role="tab" aria-selected="true" aria-controls="panel-pet" data-tab="pet"><svg><use href="#i-home"/></svg><span>团团的小窝</span></button>
+          <button id="tab-farm" role="tab" aria-selected="false" aria-controls="panel-farm" tabindex="-1" data-tab="farm"><svg><use href="#i-leaf"/></svg><span>我们的菜园</span></button>
+          <button id="tab-home" role="tab" aria-selected="false" aria-controls="panel-home" tabindex="-1" data-tab="home"><svg><use href="#i-sofa"/></svg><span>布置小家</span></button>
+        </div>
+        <div class="world-resources"><span class="coin-counter"><svg><use href="#i-coin"/></svg><b id="coins">120</b> 金币</span><span class="level-counter" id="level">Lv. 1</span><button class="connection" id="connection-button" aria-haspopup="dialog"><i id="connection-dot"></i><span id="connection-label">本地试玩</span></button></div>
+      </div>
+      <div class="world-layout">
+        <div class="play-column">
+          <section id="panel-pet" class="game-panel" role="tabpanel" aria-labelledby="tab-pet">
+            <div class="scene pet-scene" id="pet-scene">
+              <div class="scene-caption"><button class="pet-name" id="rename-pet" aria-label="给宠物取名字"><svg><use href="#i-heart"/></svg><span id="pet-name">团团</span><small>改名字</small></button><span class="scene-message" id="pet-message">今天也在等你</span></div>
+              <button class="pet-character" id="pet-character" aria-label="摸摸团团"><span class="pet-sprite" aria-hidden="true"></span></button>
+              <span class="pet-bubble" id="pet-bubble" aria-live="polite" hidden>喵，喜欢和你在一起。</span>
+            </div>
+            <div class="pet-care">
+              <div class="pet-stats">
+                <div class="pet-stat"><span><svg><use href="#i-bowl"/></svg>饱腹 <b id="hunger-value">75</b></span><progress id="hunger-bar" max="100" value="75" aria-label="饱腹程度">75</progress></div>
+                <div class="pet-stat"><span><svg><use href="#i-heart"/></svg>心情 <b id="happiness-value">75</b></span><progress id="happiness-bar" max="100" value="75" aria-label="心情">75</progress></div>
+                <div class="pet-stat"><span><svg><use href="#i-moon"/></svg>精力 <b id="energy-value">80</b></span><progress id="energy-bar" max="100" value="80" aria-label="精力">80</progress></div>
+              </div>
+              <div class="pet-actions"><button class="button rose" data-action="feed"><svg><use href="#i-bowl"/></svg>喂一口 <small>6 金币</small></button><button class="button green" data-action="play"><svg><use href="#i-play"/></svg>陪它玩</button><button class="button paper" data-action="rest"><svg><use href="#i-moon"/></svg>睡个好觉</button></div>
+              <p class="gentle-note" id="pet-help">团团不会生病或离开。你有空回来，它就很开心。</p>
+            </div>
+          </section>
+          <section id="panel-farm" class="game-panel" role="tabpanel" aria-labelledby="tab-farm" hidden>
+            <div class="section-top"><div><h2>一起种下小期待</h2><p>选择种子，再点一块空地。浇水可以让作物更快长大。</p></div><button class="small-button" id="harvest-all">收获成熟作物</button></div>
+            <div class="seed-picker" id="seed-picker" aria-label="选择种子"></div>
+            <div class="scene farm-scene" id="farm-scene"><div class="farm-plots" id="farm-plots" aria-label="六块菜地"></div><div class="garden-caption"><svg><use href="#i-leaf"/></svg><span>爱会长大，小菜也会。</span></div></div>
+            <div class="farm-footer"><span><span class="legend-dot empty"></span>空地：种下</span><span><span class="legend-dot growing"></span>生长中：浇水</span><span><span class="legend-dot ready"></span>成熟了：收获</span><p>离开页面也会生长，不会枯萎。最快 20 秒就能收获。</p></div>
+          </section>
+          <section id="panel-home" class="game-panel" role="tabpanel" aria-labelledby="tab-home" hidden>
+            <div class="section-top"><div><h2>把喜欢的东西，放进我们的家</h2><p id="home-help">买一件家具，再点「摆放」。可以拖动，也可以选中后点位置。</p></div><button class="small-button" id="remove-selected" disabled>收回选中的家具</button></div>
+            <div class="scene home-scene" id="home-scene" tabindex="0" role="group" aria-label="布置小家，选中家具后用方向键移动"><div class="home-items" id="home-items"></div><div class="home-hint" id="placement-hint" hidden>点一个位置，或用方向键微调</div></div>
+            <div class="shop-heading"><h3>把家一点点填满</h3><span id="selected-furniture-label">先从一张柔软的小毯子开始。</span></div>
+            <div class="furniture-shop" id="furniture-shop"></div>
+          </section>
+          <section class="journal-section" aria-labelledby="journal-title"><div class="journal-heading"><svg><use href="#i-book"/></svg><h2 id="journal-title">刚刚发生的小幸福</h2></div><ol id="journal-list"><li>欢迎回家，团团已经准备好认识你们了。</li></ol></section>
+        </div>
+        <aside class="sidebar">
+          <section class="daily-section" aria-labelledby="daily-title"><h2 id="daily-title"><svg><use href="#i-check"/></svg>今天的小约定</h2><p class="daily-note">一点点照顾，就会有一点点奖励。</p><div id="daily-tasks"></div><div class="level-progress"><span id="xp-label">再攒 40 点陪伴，升到下一级</span><progress id="xp-bar" max="40" value="0" aria-label="等级经验"></progress></div></section>
+          <div class="love-note"><svg><use href="#i-heart"/></svg><p>一起把小日子过好。</p><small id="daily-love">今天也想偏爱你一点。</small></div>
+          <section class="shared-section"><h2><svg><use href="#i-cloud"/></svg>我们的云端小家</h2><p id="sync-help">连接同一个房间码，就能在两台手机一起玩。</p><button class="button cloud-button" id="open-cloud"><svg><use href="#i-cloud"/></svg><span id="cloud-button-label">连接我们的云端小家</span></button><div class="actor-select"><label for="actor">这台手机属于</label><select id="actor"><option value="heok">廖炫旭</option><option value="xy">陈欣怡</option></select></div><p class="save-status" id="save-status" role="status">本机进度会自动保存</p></section>
+          <div class="utility-actions"><button id="open-guide">怎么玩？</button><button id="open-save">管理存档</button></div>
+        </aside>
+      </div>
+    </main>
+    <footer><p id="anniversary-label">在一起第 273 天 · 从 2026.01.01 开始</p><p>你和我，就是这个世界的全部玩家。</p></footer>
+  </div>
+  <dialog id="cloud-dialog" aria-labelledby="cloud-title"><button class="dialog-close" data-close="cloud-dialog" aria-label="关闭云端连接"><svg><use href="#i-close"/></svg></button><h2 id="cloud-title">让我们住进同一个小世界</h2><p>一人创建小家，把房间码私下发给另一人。另一台手机输入同一个码，进度就能共享。</p><div class="cloud-connected" id="cloud-connected" hidden><label for="current-code">你们的房间码（只发给彼此）</label><input id="current-code" readonly autocomplete="off" spellcheck="false"><button class="button green" id="copy-room">复制房间码</button><button class="text-button" id="leave-room">切回本地试玩</button></div><div id="cloud-setup"><button class="button green wide" id="create-room">创建我们的新小家</button><p class="separator">或者，加入已经创建的小家</p><form id="join-form"><label for="join-code">房间码</label><input id="join-code" placeholder="粘贴对方发来的 32 位房间码" minlength="32" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false" required><button class="button paper wide" type="submit">加入这个小家</button></form><p class="small-print">云端小家从全新的进度开始；本地试玩存档会保留。断网时暂停云端操作，避免覆盖彼此的进度。</p></div><p class="dialog-status" id="cloud-status" role="status"></p></dialog>
+  <dialog id="name-dialog" aria-labelledby="name-title"><button class="dialog-close" data-close="name-dialog" aria-label="关闭取名"><svg><use href="#i-close"/></svg></button><h2 id="name-title">给小猫取个名字</h2><form id="name-form"><label for="new-pet-name">你们想怎么叫它？</label><input id="new-pet-name" maxlength="12" autocomplete="off" required><button class="button green" type="submit">就叫这个名字</button></form><p class="dialog-status" id="name-status" role="status"></p></dialog>
+  <dialog id="guide-dialog" aria-labelledby="guide-title"><button class="dialog-close" data-close="guide-dialog" aria-label="关闭玩法说明"><svg><use href="#i-close"/></svg></button><h2 id="guide-title">我们的慢慢来指南</h2><ol class="guide-list"><li><b>照顾小猫</b><p>喂食花 6 金币；玩耍消耗精力；睡一觉补充精力。连点时它会休息几秒，不会生病或离开。</p></li><li><b>经营菜园</b><p>先选种子，再点空地。胡萝卜 20 秒、草莓 45 秒、向日葵 90 秒成熟；浇一次水会缩短剩余时间。成熟后点击收获，赚取金币和陪伴经验。</p></li><li><b>布置小家</b><p>购买家具后点「摆放」，再点场景里的位置。拖动已摆好的家具，或选中后用方向键移动。收回的家具仍属于你们。</p></li><li><b>一起完成小约定</b><p>达到目标后领取金币。每日按马来西亚时间刷新，两个人都参与可以额外领奖。</p></li><li><b>两台手机共享</b><p>连接同一个私密房间码，选好各自名字。操作同步给对方；短暂断网时会暂停，恢复后重新读取共享进度。</p></li></ol><button class="button green wide" data-close="guide-dialog">知道啦，开始过小日子</button></dialog>
+  <dialog id="save-dialog" aria-labelledby="save-title"><button class="dialog-close" data-close="save-dialog" aria-label="关闭存档管理"><svg><use href="#i-close"/></svg></button><h2 id="save-title">把我们的进度好好收起来</h2><p>本地试玩会自动保存到这台设备。导出一个备份文件，可以把本地进度搬到另一台设备。</p><button class="button green wide" id="export-save">导出本地存档</button><label class="button paper wide file-label">选择本地备份文件<input type="file" id="import-file" accept="application/json,.json" hidden></label><p id="import-summary" hidden></p><button class="button rose wide" id="confirm-import" hidden>确认恢复这份备份</button><p class="small-print">导入只替换本地试玩存档，不改动云端小家。保留房间码即可重新进入云端；请勿把房间码放进公开仓库。</p><p class="dialog-status" id="save-dialog-status" role="status"></p></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p class="noscript">请启用 JavaScript，让团团和菜园陪你一起运行。</p></noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
