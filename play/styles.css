@@ -52,6 +52,202 @@ h1 { font: 700 clamp(25px, 2.8vw, 40px)/1.5 var(--serif); margin: 0; letter-spac
 .connection i { width: 7px; height: 7px; border-radius: 50%; background: #a89c7e; }
 .connection i.connected { background: #588966; }
 .connection i.offline { background: var(--rose); }
+.tabs button { padding: 12px 19px; }
+.tabs span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 7em; }
+.bond-strip { display: flex; align-items: center; gap: 14px; padding: 12px 18px; margin-bottom: 18px; border: 1px solid #d7c9b0; border-radius: 9px; background: linear-gradient(100deg, #fff9ec, #f0e7d6); }
+.bond-strip > svg { color: var(--rose); }
+.bond-strip b { display: block; font: 600 15px var(--serif); }
+.bond-strip span { display: block; font-size: 11px; color: #85765f; margin-top: 4px; }
+.bond-strip progress { width: auto; flex: 1; max-width: 260px; margin: 0 auto 0 15px; background: #e3c8b8; }
+.bond-strip progress::-webkit-progress-value { background: #b4726c; }
+.bond-strip progress::-moz-progress-bar { background: #b4726c; }
+.bond-strip .small-button { background: #fff8e9; }
+.pet-adventure { font-size: 14px; min-height: 43px; margin-top: 13px; }
+.pet-adventure > svg:last-child { margin-left: auto; width: 16px; }
+.eyebrow { font: 10px Georgia, serif; letter-spacing: .16em; color: #9b7153; }
+.game-panel.arcade-panel { background: #fbf6e9; }
+.arcade-banner { position: relative; min-height: 295px; display: flex; align-items: center; padding: 28px 30px; overflow: hidden; background: linear-gradient(90deg, #fff5daeb 0%, #fff5dace 36%, #fff5da20 68%), url('./assets/farm-scene.png') center 40% / cover; }
+.arcade-banner > div { position: relative; z-index: 2; }
+.arcade-banner h2 { font: 700 34px/1.5 var(--serif); margin: 10px 0; color: #355140; }
+.arcade-banner p { font: 14px/1.8 var(--serif); color: #7a674b; margin: 0; }
+.arcade-banner .club-pet { position: absolute; width: 34%; height: auto; aspect-ratio: var(--pet-ratio, 1); right: 6%; bottom: 2%; background-position: 50% center; filter: drop-shadow(0 6px 7px #624d3125); }
+.club-stamp { position: absolute; right: 28px; top: 22px; border: 1px solid #a16b52; color: #914b3e; border-radius: 50%; width: 88px; height: 88px; display: grid; place-items: center; text-align: center; font: 13px/1.5 var(--serif); transform: rotate(10deg); background: #fff7d8d9; }
+.arcade-intro { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 22px 0; }
+.arcade-intro > span { color: var(--rose); font-size: 13px; }
+.arcade-intro small { color: var(--muted); font-size: 10px; }
+.game-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; padding: 18px 19px 22px; }
+.game-card { min-width: 0; display: flex; flex-direction: column; background: #fffaf0; border: 1px solid #d7c9ae; border-radius: 10px; padding: 0 15px 16px; box-shadow: 0 3px 0 #dbcdb44d; overflow: hidden; }
+.card-art { position: relative; height: 114px; margin: 0 -15px 17px; background: radial-gradient(ellipse at center bottom, #efe5c0, #f4eddb); overflow: hidden; }
+.card-art > .pet-sprite { position: absolute; width: 70%; height: 90%; bottom: -10%; left: 15%; background-position: 50% center; }
+.card-art > svg { position: absolute; width: 32px; height: 32px; left: 22%; top: 14%; color: #a75059; transform: rotate(-15deg); z-index: 1; }
+.game-card h3 { font: 700 22px var(--serif); margin: 10px 0; }
+.game-card p { color: #78806b; font-size: 12px; line-height: 1.9; margin: 0 0 14px; flex: 1; }
+.game-meta { display: flex; flex-direction: column; gap: 7px; margin-bottom: 13px; font-size: 10px; color: var(--muted); }
+.game-meta b { color: #a06e32; font-size: 11px; font-weight: 500; }
+.game-card .button { width: 100%; font-size: 13px; padding: 10px; min-height: 43px; gap: 5px; }
+.game-card .button svg { width: 15px; }
+.memory-art { display: flex; align-items: center; justify-content: center; gap: 7px; background: radial-gradient(ellipse at bottom, #d5dec5, #e8edda); }
+.memory-art > svg { position: static; width: 44px; height: 58px; padding: 9px; border: 1px solid #b5c3a2; border-radius: 5px; color: #587b50; background: #fff9e7; transform: rotate(-7deg); }
+.memory-art > svg:nth-child(2) { transform: rotate(8deg); margin-top: -15px; color: var(--rose); }
+.fishing-art { background: radial-gradient(ellipse at bottom, #496b62, #263f48); }
+.fishing-art > svg { color: #f8e2a4; width: 29px; height: 29px; left: 70%; top: 13%; }
+.pond-ripple { position: absolute; width: 60%; height: 23%; border: 1px solid #c2dadb66; border-radius: 50%; left: 20%; top: 57%; }
+.fishing-float, .pond-float { position: absolute; width: 11px; height: 27px; background: linear-gradient(#eee6c7 50%, #b2635c 50%); border-radius: 50%; left: 50%; top: 44%; transform: rotate(10deg); box-shadow: 0 6px 12px #10263033; }
+.orders-section { background: var(--surface); padding-bottom: 19px; }
+.inventory { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 22px 15px; }
+.inventory > div { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; background: #f5f1e6; }
+.inventory .plant-sprite { width: 27px; }
+.inventory b { color: var(--rose); font: 600 14px Georgia, serif; }
+.orders { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; padding: 0 22px; }
+.order-card { padding: 12px; border: 1px dashed #c4c8ae; border-radius: 8px; background: #fff7e6; }
+.order-card h4 { font: 600 15px var(--serif); margin: 0 0 7px; }
+.order-card p { font-size: 10px; color: var(--muted); line-height: 1.8; margin: 0 0 10px; }
+.order-card .small-button { font-size: 10px; width: 100%; padding: 8px 3px; min-height: 38px; }
+.order-card.completed { background: #edf2e3; }
+.theme-picker { display: flex; align-items: center; gap: 7px; padding: 8px 22px 14px; background: var(--surface); font-size: 11px; flex-wrap: wrap; }
+.theme-picker > span { color: var(--muted); margin-right: 7px; }
+.theme-picker button { border: 1px solid var(--line); background: #f5f0e4; padding: 9px 13px; border-radius: 99px; color: var(--ink); }
+.theme-picker button[aria-pressed='true'] { background: var(--green); color: var(--paper); border-color: var(--green); }
+#deselect-furniture { margin-left: auto; background: transparent; border-radius: 6px; }
+.home-scene::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; transition: background .8s; }
+.home-scene[data-theme='sunset']::after { background: linear-gradient(110deg, #e5953f4d, #a742542c); mix-blend-mode: multiply; }
+.home-scene[data-theme='night']::after { background: linear-gradient(140deg, #2332528c, #21395294); }
+.home-scene[data-theme='night'] .placed-item[data-item='lamp'] { filter: drop-shadow(0 0 15px #fff2a0); }
+.home-items { z-index: 2; }
+.home-hint { z-index: 3; }
+.milestones { margin-top: 16px; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: #fcf8ee; }
+.milestones h2 { font-size: 19px; }
+.milestones h2 svg { color: var(--gold); }
+#next-goal { font-size: 11px; line-height: 1.8; color: #8a7655; margin: 10px 0 15px; }
+#achievements { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.achievement { display: flex; align-items: flex-start; gap: 8px; opacity: .67; }
+.achievement-badge { display: grid; place-items: center; width: 30px; height: 32px; color: #9b8156; border: 1px solid #c8b997; border-radius: 50% 50% 40% 40%; background: #eee8d9; flex-shrink: 0; font: 20px Georgia, serif; }
+.achievement b { display: block; font: 600 12px/1.6 var(--serif); }
+.achievement small { display: block; font-size: 9px; line-height: 1.7; color: var(--muted); margin-top: 3px; }
+.achievement.earned { opacity: 1; }
+.achievement.earned .achievement-badge { background: #fae1a3; color: #a26d22; box-shadow: 0 0 0 2px #f8ecce; }
+.love-note .button { font-size: 12px; min-height: 40px; margin: 14px 0 10px; }
+#gift-status { display: block; line-height: 1.8; }
+.arcade-dialog { width: min(740px, calc(100% - 24px)); padding: 27px; }
+.arcade-dialog h2 { margin: 8px 0 0; }
+#arcade-instructions { font-size: 12px; margin: 7px 0 12px; color: #6f7e69; }
+.arcade-hud { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 11px 15px; border: 1px solid #d9cba9; border-radius: 9px 9px 0 0; background: #faf0d8; font-size: 12px; }
+.arcade-hud b { font: 700 21px Georgia, serif; color: var(--rose); margin-left: 5px; }
+#game-combo { font: 12px var(--serif); color: #a06e3f; text-align: right; }
+.game-board { position: relative; height: min(40dvh, 340px); min-height: 250px; border: 1px solid #c9c8ab; border-radius: 0 0 12px 12px; overflow: hidden; }
+.catch-board { background: linear-gradient(90deg, #fff6ddcf 33.3%, #f0e4cacf 33.3%, #f0e4cacf 66.6%, #fff6ddcf 66.6%), url('./assets/farm-scene.png') center / cover; }
+.falling-gift { position: absolute; transform: translate(-50%, -50%); width: 39px; height: 39px; display: grid; place-items: center; background: #fff1db; border-radius: 10px; border: 1px solid #cc9a7f; box-shadow: 0 4px 7px #876b4820; color: var(--rose); z-index: 2; }
+.falling-gift svg { width: 25px; height: 25px; }
+.catch-line { position: absolute; top: 77%; left: 0; width: 100%; border-top: 2px dashed #a37d4e; text-align: center; font-size: 10px; color: #8d7148; padding-top: 3px; }
+.catch-board .catch-kitten { position: absolute; left: 50%; bottom: -2%; width: 100px; height: auto; aspect-ratio: var(--pet-ratio, 1); transform: translateX(-50%); background-position: 50% center; transition: left .09s; z-index: 3; }
+.catch-board.hit { box-shadow: inset 0 0 30px #f9d987; }
+.game-controls { display: flex; justify-content: center; gap: 12px; margin-top: 12px; }
+.game-controls > button { flex: 1; min-height: 52px; }
+.memory-board { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 10px; padding: 16px; background: radial-gradient(ellipse at top, #ecedd9, #d2dcc6); }
+.memory-tile { position: relative; border: 1px solid #b2c0a0; border-radius: 7px; background: repeating-linear-gradient(45deg, #a6bb9233, #a6bb9233 3px, #c5d1b744 3px, #c5d1b744 8px), #e5e8ce; color: #66825a; transition: background .18s, transform .18s; box-shadow: 0 3px 0 #819b7740; }
+.memory-tile .card-back { font: 30px var(--serif); }
+.memory-tile svg { display: none; width: 35px; height: 35px; margin: auto; }
+.memory-tile.flipped { background: #fff8df; transform: rotate(-1deg); color: var(--rose); }
+.memory-tile.flipped svg { display: block; }
+.memory-tile.flipped .card-back { display: none; }
+.memory-tile.matched { background: #f9eab8; border-color: #c3aa69; opacity: 1; box-shadow: none; color: #847333; }
+.memory-hint { font-size: 12px; color: var(--muted); margin: 0; padding: 9px; }
+.fishing-board { background: radial-gradient(ellipse at 60% 0, #486964, #253f48); color: #f9ecd0; }
+.pond-moon { position: absolute; top: 18px; right: 15%; color: #fae2a0; filter: drop-shadow(0 0 14px #fff4bc66); }
+.pond-moon svg { width: 38px; height: 38px; }
+.game-pond { position: absolute; inset: 14% 8% 25%; }
+.game-pond .pond-ripple { top: 43%; width: 46%; left: 27%; height: 22%; animation: ripple 2.5s ease-in-out infinite; }
+.game-pond .pond-ripple.second { width: 64%; left: 18%; top: 39%; height: 30%; animation-delay: 1s; }
+.pond-float { top: 38%; height: 35px; width: 14px; animation: bob 1.8s ease-in-out infinite; }
+.pond-float.biting { background: #f9d76b; animation: bob .15s ease-in-out infinite; box-shadow: 0 0 15px #ffe0a0; }
+.pond-float.caught { transform: translateY(-40px) rotate(30deg); }
+.fishing-label { position: absolute; width: 100%; bottom: 19%; text-align: center; padding: 0 12px; font: 13px var(--serif); }
+.fishing-meter { position: absolute; left: 8%; right: 8%; bottom: 10%; height: 18px; border-radius: 99px; border: 1px solid #a6bdaf; background: #1b343a; }
+.fishing-zone { position: absolute; height: 100%; background: #e5be66; border-radius: 3px; }
+.fishing-marker { position: absolute; width: 8px; height: 28px; top: -6px; background: #fff4da; border-radius: 3px; transform: translateX(-50%); box-shadow: 0 0 7px #fff5cc44; }
+.fishing-board.biting .fishing-label { color: #ffdd83; }
+.game-controls .reel-button { max-width: 350px; }
+.game-result { margin-top: 16px; text-align: center; padding: 17px; border: 1px solid #e0c794; border-radius: 10px; background: #fff3d7; }
+#game-stars { color: #b8842b; font: 31px Georgia, serif; letter-spacing: .13em; }
+.game-result h3 { font: 600 21px var(--serif); margin: 9px 0; }
+.game-result p { font-size: 12px; margin: 8px 0 12px; }
+.game-result .button { font-size: 13px; min-height: 42px; padding: 9px 15px; margin: 3px; }
+#game-save-status { margin: 12px 0 0; }
+.heart-burst { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
+.heart-burst span { position: absolute; left: calc(8% + var(--i) * 7%); bottom: -40px; font: 34px var(--serif); color: #b06f74; animation: hearts 1.4s ease-out forwards; animation-delay: calc(var(--i) * .025s); }
+@keyframes hearts { 0% { transform: translateY(0) rotate(-15deg); opacity: 1; } 100% { transform: translateY(-65vh) rotate(25deg); opacity: 0; } }
+@keyframes ripple { 50% { transform: scale(1.1); opacity: .5; } }
+@keyframes bob { 50% { margin-top: 4px; } }
+@media (max-width: 1100px) {
+  .tabs button { padding: 11px 12px; }
+  .game-cards { gap: 8px; padding: 16px 12px; }
+  .game-card { padding: 0 10px 12px; }
+  .card-art { margin-left: -10px; margin-right: -10px; }
+  .game-card h3 { font-size: 19px; }
+  .arcade-banner h2 { font-size: 29px; }
+  .orders { gap: 7px; padding: 0 12px; }
+}
+@media (max-width: 850px) {
+  .love-note { display: block !important; margin-top: 0; }
+  .milestones { margin-top: 0; }
+  .bond-strip progress { max-width: none; }
+}
+@media (max-width: 640px) {
+  .tabs button { padding: 10px 5px; font-size: 12px; gap: 4px; }
+  .tabs button svg { width: 15px; height: 15px; }
+  .bond-strip { padding: 11px 12px; gap: 8px; flex-wrap: wrap; }
+  .bond-strip b { font-size: 12px; }
+  .bond-strip span { font-size: 10px; }
+  .bond-strip > progress { order: 4; width: 100%; flex-basis: 100%; height: 5px; margin: 1px 0 0; }
+  .bond-strip .small-button { margin-left: auto; min-height: 36px; font-size: 10px; max-width: none; padding: 8px 10px; }
+  .pet-adventure { font-size: 12px; flex-wrap: wrap; gap: 5px; }
+  .pet-adventure small { font-size: 10px; }
+  .arcade-banner { min-height: 258px; padding: 24px 20px; }
+  .arcade-banner h2 { font-size: 27px; }
+  .arcade-banner p { font-size: 12px; max-width: 17em; }
+  .arcade-banner .club-pet { width: 38%; right: 0; bottom: -1%; opacity: .9; }
+  .club-stamp { width: 65px; height: 65px; right: 12px; top: 20px; font-size: 10px; }
+  .arcade-intro { padding: 14px 14px 0; align-items: start; }
+  .arcade-intro > span { font-size: 11px; }
+  .arcade-intro small { font-size: 9px; max-width: 10em; text-align: right; line-height: 1.7; }
+  .game-cards { grid-template-columns: 1fr; padding: 15px; gap: 16px; }
+  .game-card { display: grid; grid-template-columns: 94px 1fr; column-gap: 15px; padding: 15px; }
+  .game-card .card-art { grid-column: 1; grid-row: 1 / 5; width: 94px; height: 100%; min-height: 130px; margin: 0; border-radius: 6px; }
+  .game-card > .eyebrow, .game-card h3, .game-card p, .game-meta { grid-column: 2; }
+  .game-card h3 { margin: 6px 0; font-size: 21px; }
+  .game-card p { font-size: 11px; margin: 0 0 7px; }
+  .game-meta { flex-direction: row; flex-wrap: wrap; gap: 6px; margin-bottom: 0; }
+  .game-card .button { grid-column: 1 / -1; margin-top: 13px; font-size: 14px; }
+  .memory-art { flex-direction: column; gap: 3px; }
+  .memory-art > svg { width: 30px; height: 36px; padding: 4px; }
+  .memory-art > svg:nth-child(2) { margin: 0 0 0 15px; }
+  .card-art > .pet-sprite { width: 145%; height: 80%; left: -20%; bottom: 1%; }
+  .orders { grid-template-columns: 1fr; padding: 0 13px; gap: 8px; }
+  .order-card { display: grid; grid-template-columns: minmax(0,1fr) auto; column-gap: 10px; }
+  .order-card h4 { margin: 0; }
+  .order-card p { grid-column: 1; margin: 5px 0 0; }
+  .order-card .small-button { grid-column: 2; grid-row: 1 / 3; max-width: none; width: auto; padding: 9px; font-size: 11px; }
+  .inventory { padding: 7px 13px 14px; gap: 6px; }
+  .inventory > div { padding: 6px; font-size: 10px; gap: 4px; }
+  .inventory .plant-sprite { width: 23px; }
+  .theme-picker { padding: 7px 13px 13px; gap: 5px; }
+  .theme-picker button { padding: 8px 10px; font-size: 10px; }
+  .theme-picker > span { width: 100%; }
+  .arcade-dialog { padding: 23px 15px 17px; max-height: calc(100dvh - 24px); }
+  .arcade-dialog h2 { font-size: 24px; }
+  #arcade-instructions { font-size: 11px; }
+  .arcade-hud { padding: 9px 10px; font-size: 11px; gap: 6px; }
+  .arcade-hud b { font-size: 19px; margin-left: 3px; }
+  #game-combo { font-size: 10px; }
+  .game-board { height: min(43dvh, 360px); min-height: 250px; }
+  .memory-board { padding: 13px; gap: 8px; }
+  .memory-tile svg { width: 27px; height: 27px; }
+  .game-controls { gap: 8px; }
+  .game-controls > button { min-height: 48px; font-size: 14px; }
+  .game-result { padding: 14px 8px; }
+  .game-result h3 { font-size: 18px; }
+  .game-result .button { font-size: 12px; padding: 8px 10px; }
+}
 .world-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 22px; align-items: start; }
 .play-column, .sidebar { min-width: 0; }
 .game-panel { border: 1px solid var(--line); border-radius: 15px; overflow: hidden; background: var(--sage); }
