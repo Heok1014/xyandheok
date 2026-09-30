@@ -1,7 +1,7 @@
 import { CATALOG, ORDERS, ACHIEVEMENTS, createWorld, normalizeWorld, advanceWorld, applyAction, getCropStatus, getLevel, getDailyTasks, serializeWorld, importWorld } from './engine.js?v=2';
 import { cloudConfig } from './config.js';
 import { WorldClient } from './client.js';
-import { ArcadeController } from './arcade.js?v=2.2';
+import { ArcadeController } from './arcade.js?v=3';
 import { playSound, toggleSound, soundEnabled } from './sound.js';
 
 const $ = id => document.getElementById(id);
@@ -11,6 +11,7 @@ let storageOK = true, savedCode = '', actor = 'heok', local = createWorld(), cod
 let online = false, busy = false, seed = 'carrot', selected = '', importCandidate = null, drag = null;
 let journalSignature = '', toastTimer, poseTimer, polling = false;
 let clockOffset = 0;
+let viewMode = '2d', homeView = null, homeLoading = null;
 const client = new WorldClient(cloudConfig.apiBase);
 try {
   const raw = localStorage.getItem(key);
@@ -39,6 +40,7 @@ function node(tag, className, text) {
 }
 function sprite(kind, id) { const el = node('span', `${kind}-sprite ${id}`); el.dataset[kind === 'plant' ? 'crop' : 'item'] = id; el.setAttribute('aria-hidden', 'true'); return el; }
 function toast(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 3500); }
+function statusText(id, text) { if ($(id).textContent !== text) $(id).textContent = text; }
 function dialog(id) { $(id).showModal(); document.documentElement.style.overflow = 'hidden'; }
 document.querySelectorAll('dialog').forEach(el => el.addEventListener('close', () => { document.documentElement.style.overflow = ''; }));
 document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => $(el.dataset.close).close()));
@@ -73,9 +75,10 @@ async function action(input) {
 const tabs = [...document.querySelectorAll('[data-tab]')];
 function chooseTab(id) {
   tabs.forEach(tab => { const active = tab.dataset.tab === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; $(`panel-${tab.dataset.tab}`).hidden = !active; });
+  homeView?.setActive(id === 'home' && viewMode === '3d');
 }
 tabs.forEach((tab, i) => {
-  tab.addEventListener('click', () => chooseTab(tab.dataset.tab));
+  tab.addEventListener('click', () => { chooseTab(tab.dataset.tab); if (matchMedia('(max-width: 640px)').matches) window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); });
   tab.addEventListener('keydown', event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
@@ -110,7 +113,8 @@ const furnitureCards = CATALOG.furniture.map(item => {
   card.append(sprite('furniture', item.id), node('h4', '', item.name), status, button); $('furniture-shop').append(card);
   button.addEventListener('click', async () => {
     if (!world().owned.includes(item.id) && !(await action({ type: 'buy', item: item.id }))) return;
-    selected = item.id; render(); toast('点场景里的位置摆放，也可以拖动家具。');
+    setHomeMode('2d');
+    selected = item.id; render(); $('home-scene').focus({ preventScroll: true }); toast('点场景里的位置摆放，也可以用方向键微调。');
   });
   return { card, status, button, item };
 });
@@ -145,6 +149,38 @@ $('home-scene').addEventListener('keydown', event => {
 });
 $('remove-selected').addEventListener('click', () => action({ type: 'remove', item: selected }));
 $('deselect-furniture').addEventListener('click', () => { selected = ''; render(); });
+
+function updateHomeMode() {
+  $('home-scene').hidden = viewMode !== '2d'; $('home-3d-wrap').hidden = viewMode !== '3d';
+  $('view-2d').setAttribute('aria-pressed', String(viewMode === '2d'));
+  $('view-3d').setAttribute('aria-pressed', String(viewMode === '3d'));
+  $('touch-3d-pet').disabled = !homeView;
+  $('home-help').textContent = viewMode === '3d' ? '这里是当前小家的3D预览。购买、摆放请回到2D布置。' : '买一件家具，再点「摆放」。可以拖动，也可以选中后点位置。';
+  homeView?.setActive(viewMode === '3d' && !$('panel-home').hidden);
+}
+async function setHomeMode(mode) {
+  viewMode = mode; updateHomeMode();
+  if (mode !== '3d') return;
+  if (!homeView && !homeLoading) {
+    $('home-3d-status').textContent = '正在加载3D小家；旧存档不会改变……';
+    homeLoading = import('./home-view.js?v=3').then(module => module.createHomeView({
+      container: $('home-3d'), status: $('home-3d-status'),
+      onPet: () => { toast(`${world().pet.name}：和你一起，哪里都是家。`); playSound('touch'); },
+      onFailure: message => { homeView?.dispose(); homeView = null; viewMode = '2d'; updateHomeMode(); toast(message); },
+    })).then(view => { homeView = view; homeView.update(world()); updateHomeMode(); })
+      .catch(() => { viewMode = '2d'; updateHomeMode(); toast('这台设备暂时无法显示3D，2D游戏与原进度仍可正常使用。'); })
+      .finally(() => { homeLoading = null; });
+  }
+  await homeLoading;
+  homeView?.update(world());
+}
+$('view-2d').addEventListener('click', () => setHomeMode('2d'));
+$('view-3d').addEventListener('click', () => setHomeMode('3d'));
+$('reset-3d').addEventListener('click', () => homeView?.reset());
+$('touch-3d-pet').addEventListener('click', () => homeView?.touchPet());
+window.addEventListener('pagehide', () => homeView?.setActive(false));
+window.addEventListener('pageshow', updateHomeMode);
+if (matchMedia('(max-width: 640px)').matches) document.querySelector('.daily-section').open = false;
 document.querySelectorAll('[data-theme]').forEach(button => button.addEventListener('click', () => action({ type: 'theme', theme: button.dataset.theme })));
 $('send-gift').addEventListener('click', () => action({ type: 'gift' }));
 $('sound-toggle').addEventListener('click', () => { toggleSound(); $('sound-toggle').textContent = soundEnabled() ? '音效：开' : '音效：关'; $('sound-toggle').setAttribute('aria-pressed', String(soundEnabled())); });
@@ -153,8 +189,8 @@ function celebrate() {
   for (let i = 0; i < 12; i++) { const heart = node('span', '', '♡'); heart.style.setProperty('--i', i); burst.append(heart); }
   document.body.append(burst); setTimeout(() => burst.remove(), 1600);
 }
-const arcade = new ArcadeController({ act: action, getWorld: world, getActor: () => actor, open: () => dialog('arcade-dialog'), feedback: playSound });
-document.querySelectorAll('[data-game]').forEach(button => button.addEventListener('click', () => arcade.start(button.dataset.game)));
+const arcade = new ArcadeController({ act: action, getWorld: world, getActor: () => actor, open: () => dialog('arcade-dialog'), feedback: playSound, isShared: () => !!code });
+document.querySelectorAll('[data-game]').forEach(button => button.addEventListener('click', () => arcade.prepare(button.dataset.game)));
 const inventoryNodes = CATALOG.crops.map(crop => {
   const el = node('div'), count = node('b'); el.append(sprite('plant', crop.id), node('span', '', crop.name), count); $('inventory').append(el); return count;
 });
@@ -199,6 +235,7 @@ function render() {
   $('gift-status').textContent = partnerGifted ? '对方今天也把心意留给了你。' : '每人每天一次，不花金币。';
   document.querySelectorAll('[data-theme]').forEach(button => { button.disabled = locked; button.setAttribute('aria-pressed', String(button.dataset.theme === adventure.theme)); });
   $('home-scene').dataset.theme = adventure.theme;
+  homeView?.update(state);
   $('actor').disabled = busy || arcade.running;
   $('coins').textContent = state.coins; $('level').textContent = `Lv. ${getLevel(state)}`;
   $('pet-name').textContent = state.pet.name; $('tab-pet').querySelector('span').textContent = '小猫'; $('tab-pet').setAttribute('aria-label', `${state.pet.name}的小窝`);
@@ -234,17 +271,19 @@ function render() {
       });
       $('home-items').append(el); placedNodes.set(item.id, el);
     }
-    el.classList.toggle('selected', selected === item.id); el.disabled = locked;
+    el.classList.toggle('selected', selected === item.id); el.setAttribute('aria-pressed', String(selected === item.id)); el.disabled = locked;
     if (drag?.el !== el) { el.style.left = `${item.x}%`; el.style.top = `${item.y}%`; }
     el.style.zIndex = item.id === 'rug' ? '0' : String(Math.round(item.y));
   }
   $('remove-selected').disabled = locked || !state.placed.some(item => item.id === selected);
   $('placement-hint').hidden = !selected;
   $('selected-furniture-label').textContent = selected ? `正在布置：${CATALOG.furniture.find(item => item.id === selected).name}` : '先从一张柔软的小毯子开始。';
-  getDailyTasks(state, now()).forEach((task, index) => {
+  const dailyTasks = getDailyTasks(state, now());
+  $('daily-summary').textContent = `${dailyTasks.filter(task => task.complete).length} / ${dailyTasks.length}`;
+  dailyTasks.forEach((task, index) => {
     const el = taskNodes[index]; el.title.textContent = task.id === 'feed' ? `喂${state.pet.name}一次` : task.name;
     el.progress.textContent = `${Math.min(task.progress, task.target)} / ${task.target}`;
-    el.button.textContent = task.claimed ? '已领取' : `${task.reward} 金币`;
+    el.button.textContent = task.claimed ? '已领取' : task.complete ? `领 ${task.reward} 金币` : `+${task.reward} 金币`;
     el.button.disabled = locked || !task.complete || task.claimed; el.button.setAttribute('aria-label', `${el.title.textContent}：${el.button.textContent}`);
     el.row.classList.toggle('claimed', task.claimed); el.button.classList.toggle('claimable', task.complete && !task.claimed);
   });
@@ -255,9 +294,9 @@ function render() {
     if (!state.journal.length) $('journal-list').append(node('li', '', '欢迎回家，小猫已经准备好认识你们了。'));
     for (const entry of state.journal.slice(-5).reverse()) $('journal-list').append(node('li', '', `${names[entry.actor] || '我们'} · ${entry.message}`));
   }
-  $('connection-label').textContent = code ? online ? '进度已同步' : '重连中' : '本地试玩';
+  $('connection-label').textContent = code ? busy || client.pending ? '正在确认操作' : online ? '云端已同步' : '断网 · 重连中' : '本地试玩';
   $('connection-dot').className = code && online ? 'connected' : code ? 'offline' : '';
-  $('save-status').textContent = !storageOK ? '浏览器未能保存，请导出本地备份并保管房间码。' : code ? online ? '共用同一份进度，约 5 秒同步一次' : '断网时暂停操作；连接恢复后自动重试' : '本机进度会自动保存';
+  statusText('save-status', !storageOK ? '浏览器未能保存，请导出本地备份并保管房间码。' : code ? busy || client.pending ? '操作正在等待确认，请勿切换房间。' : online ? '共用同一份进度，约 5 秒同步一次' : '断网时暂停操作；连接恢复后自动重试' : '本机进度会自动保存');
   $('cloud-button-label').textContent = code ? '查看我们的房间码' : '连接我们的云端小家';
   $('cloud-connected').hidden = !code; $('cloud-setup').hidden = !!code; $('current-code').value = code;
   $('create-room').disabled = !cloudConfig.apiBase || busy; $('join-form').querySelector('button').disabled = !cloudConfig.apiBase || busy;

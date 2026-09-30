@@ -1,7 +1,13 @@
 import { getChallenge, evaluateChallenge } from './arcade-rules.js';
 
 const $ = id => document.getElementById(id);
+function setLabel(id, text) { if ($(id).textContent !== text) $(id).textContent = text; }
 const GAME_NAMES = { catch: '接住小心意', memory: '记忆花园', fishing: '月光钓鱼' };
+const GAME_COPY = {
+  catch: { title: '准备接住小心意', copy: '20 秒，十五份礼物。礼物落到虚线时，点对应一列；键盘可用 1 / 2 / 3，或左右移动后按空格。' },
+  memory: { title: '准备走进记忆花园', copy: '60 秒，六对图案。一次翻两张，记住不同图案的位置，再找出相同的一对。' },
+  fishing: { title: '准备收获月光小幸运', copy: '20 秒，五次机会。浮标进入金色区域时点收竿，或按空格；太早、太晚都钓不到。' },
+};
 const SYMBOLS = ['heart', 'leaf', 'home', 'moon', 'gift', 'bowl'];
 const SYMBOL_NAMES = ['心意', '树叶', '小家', '月亮', '礼物', '饭碗'];
 function element(tag, className, text) {
@@ -16,12 +22,15 @@ function icon(name) {
 }
 
 export class ArcadeController {
-  constructor({ act, getWorld, getActor, open, feedback }) {
-    Object.assign(this, { act, getWorld, getActor, open, feedback });
-    this.running = false; this.frame = 0; this.delays = new Set();
+  constructor({ act, getWorld, getActor, open, feedback, isShared = () => false }) {
+    Object.assign(this, { act, getWorld, getActor, open, feedback, isShared });
+    this.running = false; this.preparing = false; this.locked = false; this.frame = 0; this.delays = new Set();
     $('close-arcade').addEventListener('click', () => this.exit());
     $('game-done').addEventListener('click', () => this.exit());
-    $('game-again').addEventListener('click', () => this.start(this.game));
+    $('game-again').addEventListener('click', () => this.prepare(this.game));
+    $('begin-game').addEventListener('click', () => {
+      if (this.preparing && !$('begin-game').disabled && $('arcade-dialog').open) return this.start(this.game);
+    });
     $('cancel-game-exit').addEventListener('click', () => { this.exitPrompt(false); $('game-board').focus(); });
     $('confirm-game-exit').addEventListener('click', () => this.leave());
     $('arcade-dialog').addEventListener('cancel', event => { event.preventDefault(); this.exit(); });
@@ -37,8 +46,42 @@ export class ArcadeController {
   }
 
   stop() {
-    this.running = false; cancelAnimationFrame(this.frame);
+    this.running = false; this.preparing = false; $('game-ready').hidden = true; cancelAnimationFrame(this.frame);
     for (const timer of this.delays) clearTimeout(timer); this.delays.clear();
+    this.syncControls();
+  }
+
+  resetResult() {
+    $('game-result').hidden = true; $('game-stars').textContent = '';
+    $('game-result-title').textContent = '这一局的小快乐'; $('game-result-detail').textContent = '';
+  }
+
+  syncControls() {
+    const blocked = !this.running || this.preparing || this.starting || this.finishing || !$('game-exit-confirm').hidden;
+    for (const id of ['game-board', 'game-controls']) {
+      $(id).inert = !!blocked;
+      $(id).querySelectorAll('button').forEach(button => { button.disabled = !!blocked || button.classList.contains('matched'); });
+    }
+  }
+
+  prepare(game) {
+    if (this.starting || this.finishing || this.running || this.locked || typeof game !== 'string' || !Object.hasOwn(GAME_COPY, game)) return;
+    this.stop(); this.game = game; this.preparing = true;
+    this.session = null; this.challenge = null; this.owner = null; this.confirmedRun = null;
+    this.inputs = []; this.score = 0; this.streak = 0;
+    this.exitPrompt(false); this.resetResult();
+    $('arcade-title').textContent = GAME_NAMES[game]; $('arcade-instructions').textContent = GAME_COPY[game].copy;
+    $('game-ready-title').textContent = GAME_COPY[game].title; $('game-ready-copy').textContent = GAME_COPY[game].copy;
+    $('game-ready').hidden = false; $('begin-game').disabled = false;
+    $('game-board').replaceChildren(); $('game-controls').replaceChildren();
+    $('game-score').textContent = '0'; $('game-time').textContent = game === 'memory' ? '60' : '20';
+    $('game-progress').max = 100; $('game-progress').value = 0; $('game-progress').setAttribute('aria-label', '本局时间进度');
+    $('game-attempts').textContent = game === 'fishing' ? '机会 1 / 5' : game === 'catch' ? '十五份小心意' : '配对 0 / 6';
+    $('game-combo').textContent = '准备好，再出发';
+    $('game-save-status').textContent = '准备页不计时、不消耗奖励次数。点击开始才会建立本局。';
+    $('game-again').disabled = true; $('game-done').disabled = false; $('close-arcade').disabled = false;
+    if (!$('arcade-dialog').open) this.open();
+    $('begin-game').focus();
   }
 
   exit() {
@@ -54,17 +97,19 @@ export class ArcadeController {
 
   exitPrompt(show) {
     $('game-exit-confirm').hidden = !show;
-    $('game-board').inert = show; $('game-controls').inert = show;
+    this.syncControls();
   }
 
   async start(game) {
-    if (this.starting || this.finishing || this.running) return;
+    if (this.starting || this.finishing || this.running || this.locked || typeof game !== 'string' || !Object.hasOwn(GAME_COPY, game)) return;
     this.stop(); this.game = game; this.starting = true; this.owner = this.getActor();
+    this.confirmedRun = null; $('begin-game').disabled = true;
     this.exitPrompt(false);
-    $('arcade-title').textContent = GAME_NAMES[game]; $('game-result').hidden = true;
+    $('arcade-title').textContent = GAME_NAMES[game]; this.resetResult();
     $('game-save-status').textContent = '正在准备你们的专属关卡……';
     $('game-board').replaceChildren(); $('game-controls').replaceChildren();
     $('game-score').textContent = '0'; $('game-time').textContent = game === 'memory' ? '60' : '20';
+    $('game-progress').max = 100; $('game-progress').value = 0;
     $('game-again').disabled = true; $('close-arcade').disabled = true;
     if (!$('arcade-dialog').open) this.open();
     try {
@@ -73,31 +118,38 @@ export class ArcadeController {
       }
       this.session = this.getWorld().adventure.sessions[this.owner];
       if (!this.session || this.session.game !== game) throw new Error('关卡未就绪。');
-      this.challenge = getChallenge(this.session); this.inputs = []; this.score = 0;
+      this.challenge = getChallenge(this.session); this.inputs = []; this.score = 0; this.streak = 0;
+      if (!this.challenge) throw new Error('关卡数据无效。');
       this.started = performance.now(); this.running = true; this.finishing = false; this.lane = 1;
       $('game-board').className = `game-board ${game}-board`;
       $('game-save-status').textContent = '关卡计时不会因切到后台而暂停。退出本局不领奖。';
       $('game-combo').textContent = '一起加油';
       if (game === 'memory') this.buildMemory(); else if (game === 'catch') this.buildCatch(); else this.buildFishing();
-      $('game-board').focus(); this.tick();
+      this.tick();
     } catch {
       this.stop(); $('game-save-status').textContent = '关卡未能打开，请刷新后再试。';
-    } finally { this.starting = false; $('close-arcade').disabled = false; }
+    } finally {
+      this.starting = false; $('close-arcade').disabled = false; this.syncControls();
+      if (this.running) $('game-board').focus();
+    }
   }
 
   elapsed() { return Math.max(0, Math.floor(performance.now() - this.started)); }
   proof() { return this.inputs.join(','); }
   stamp(value) {
     const previous = this.inputs.length ? Number(this.inputs.at(-1).split(':')[0]) : -1;
-    const at = Math.max(previous + 1, this.elapsed());
-    if (at > this.challenge.duration || this.inputs.length >= 128) return false;
+    const at = this.elapsed();
+    // Ignore same-millisecond repeats rather than fabricating future proof times.
+    if (at <= previous || at > this.challenge.duration || this.inputs.length >= 128) return false;
     this.inputs.push(this.game === 'fishing' ? String(at) : `${at}:${value}`); return true;
   }
   refreshScore() {
-    const result = evaluateChallenge(this.session, this.proof(), this.elapsed() + 1);
-    const score = result.score || 0, improved = score > this.score;
+    const result = evaluateChallenge(this.session, this.proof(), this.elapsed());
+    if (!result.ok) return false;
+    const score = result.score, improved = score > this.score;
     this.score = score; $('game-score').textContent = score;
-    $('game-combo').textContent = improved ? this.game === 'fishing' ? '收竿成功！' : '接住啦！' : '再找准一点';
+    if (this.game === 'catch') this.streak = improved ? this.streak + 1 : 0;
+    $('game-combo').textContent = improved ? this.game === 'fishing' ? '收竿成功！' : `连续接住 ${this.streak} 份小心意` : '再找准一点';
     this.feedback(improved ? 'reward' : 'miss'); return improved;
   }
 
@@ -189,6 +241,9 @@ export class ArcadeController {
     if (!this.running || this.finishing) return;
     const at = this.elapsed(), remaining = Math.max(0, this.challenge.duration - at);
     $('game-time').textContent = Math.ceil(remaining / 1000);
+    $('game-progress').value = Math.min(100, at / this.challenge.duration * 100);
+    if (this.game === 'memory') setLabel('game-attempts', `配对 ${this.score} / 6`);
+    if (this.game === 'catch') setLabel('game-attempts', `接住 ${this.score} / ${this.challenge.targets.length}`);
     if (this.game === 'catch') this.challenge.targets.forEach((target, index) => {
       const offset = at - target.at, gift = this.falling[index]; gift.hidden = offset < -1600 || offset > 450;
       gift.style.top = `${Math.min(89, 77 + offset / 1600 * 65)}%`;
@@ -197,6 +252,8 @@ export class ArcadeController {
       this.marker.style.left = `${Math.min(100, at / this.challenge.duration * 100)}%`;
       const biting = this.challenge.targets.some(target => Math.abs(at - target.at) <= target.width / 2);
       this.float.classList.toggle('biting', biting); $('game-board').classList.toggle('biting', biting);
+      const opportunity = this.challenge.targets.findIndex(target => at <= target.at + target.width / 2);
+      setLabel('game-attempts', opportunity < 0 ? '五次机会已结束 · 5 / 5' : `机会 ${opportunity + 1} / 5`);
     }
     if (at >= this.challenge.duration) { this.finish(); return; }
     this.frame = requestAnimationFrame(() => this.tick());
@@ -205,8 +262,8 @@ export class ArcadeController {
   async finish() {
     if (!this.running || this.finishing) return;
     this.finishing = true; cancelAnimationFrame(this.frame);
-    this.exitPrompt(false);
-    $('close-arcade').disabled = true; $('game-controls').querySelectorAll('button').forEach(button => button.disabled = true);
+    this.exitPrompt(false); this.resetResult();
+    $('close-arcade').disabled = true;
     $('game-save-status').textContent = '这一局结束了，正在安全结算……';
     $('game-result').hidden = false; $('game-result-detail').textContent = '请等服务器确认奖励。';
     $('game-again').disabled = true; $('game-done').disabled = true;
@@ -216,7 +273,7 @@ export class ArcadeController {
       this.showResult(this.getWorld().adventure.results[this.owner]);
     } finally {
       this.finishing = false; this.running = false; $('close-arcade').disabled = false;
-      $('game-done').disabled = false; $('game-again').disabled = false;
+      $('game-done').disabled = false; $('game-again').disabled = this.locked; this.syncControls();
     }
   }
 
@@ -227,12 +284,15 @@ export class ArcadeController {
     $('game-stars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
     $('game-result-title').textContent = ratio >= .85 ? '这一局，闪闪发光。' : ratio >= .5 ? '好默契，再靠近一点。' : '快乐不止在满分那一刻。';
     $('game-result-detail').textContent = `${result.score} / ${result.maxScore} 分 · +${result.reward} 金币 · +${result.xp} 陪伴经验${result.reward === 0 ? '。今天的奖励次数用完或本局未得分，仍可继续练习。' : '。已收入我们的小家。'}`;
-    $('game-save-status').textContent = '奖励已保存。另一台手机也能看到这一份快乐。';
+    $('game-save-status').textContent = this.isShared() ? '奖励已保存。另一台手机也能看到这一份快乐。' : '奖励已保存到这台设备。本地试玩不会同步到另一台手机。';
     this.feedback(result.score ? 'reward' : 'touch');
   }
 
   reconcile(state, locked) {
+    this.locked = !!locked;
+    $('begin-game').disabled = !this.preparing || this.locked;
     if (!$('arcade-dialog').open || this.starting) return;
+    if (this.preparing) return;
     if (!this.running && !this.finishing) {
       $('game-again').disabled = locked;
       const result = state.adventure.results[this.owner];

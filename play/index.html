@@ -7,7 +7,9 @@
   <meta name="description" content="一只小猫，一片菜园，一个慢慢变好的家。属于我们的双人小天地。">
   <meta name="referrer" content="no-referrer">
   <title>我们的小日子 · 廖炫旭与陈欣怡</title>
-  <link rel="stylesheet" href="./styles.css?v=2.2">
+  <link rel="stylesheet" href="./styles.css?v=3">
+  <link rel="stylesheet" href="./experience.css?v=3">
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js"}}</script>
 </head>
 <body>
   <svg class="icon-library" aria-hidden="true"><defs>
@@ -34,7 +36,7 @@
     </header>
     <main>
       <section class="welcome" aria-labelledby="welcome-title">
-        <div><h1 id="welcome-title">把平凡的日子，玩成我们的冒险。</h1><p>种下期待，接住心意。小小的世界，也有大大的快乐。</p></div>
+        <div><h1 id="welcome-title">把今天，也住进回忆里。</h1><p>照顾团团，种点期待，再一起玩一局。</p></div>
         <div class="welcome-note"><svg><use href="#i-heart"/></svg><span>不用很厉害，<br>一起慢慢来就好。</span></div>
       </section>
       <div class="world-toolbar">
@@ -75,8 +77,10 @@
           </section>
           <section id="panel-home" class="game-panel" role="tabpanel" aria-labelledby="tab-home" hidden>
             <div class="section-top"><div><h2>把喜欢的东西，放进我们的家</h2><p id="home-help">买一件家具，再点「摆放」。可以拖动，也可以选中后点位置。</p></div><button class="small-button" id="remove-selected" disabled>收回选中的家具</button></div>
+            <div class="home-view-toolbar"><div class="view-switch" role="group" aria-label="小家查看方式"><button id="view-2d" aria-pressed="true">2D 布置</button><button id="view-3d" aria-pressed="false">3D 看家</button></div><span>同一份家具进度 · 3D 不额外扣金币</span></div>
             <div class="theme-picker" aria-label="小家主题"><span>窗外的时光</span><button data-theme="morning" aria-pressed="true">晨光</button><button data-theme="sunset" aria-pressed="false">落日</button><button data-theme="night" aria-pressed="false">月夜</button><button id="deselect-furniture">结束布置</button></div>
             <div class="scene home-scene" id="home-scene" tabindex="0" role="group" aria-label="布置小家，选中家具后用方向键移动"><div class="home-items" id="home-items"></div><div class="home-hint" id="placement-hint" hidden>点一个位置，或用方向键微调</div></div>
+            <div id="home-3d-wrap" class="home-3d-wrap" hidden><div id="home-3d" class="home-3d"></div><div class="home-3d-controls"><button class="small-button" id="reset-3d">复位视角</button><button class="small-button" id="touch-3d-pet" disabled>摸摸小猫</button><span>横向拖动旋转 · 点点小猫</span></div><p id="home-3d-status" role="status">第一次开启时加载轻量模型。</p></div>
             <div class="shop-heading"><h3>把家一点点填满</h3><span id="selected-furniture-label">先从一张柔软的小毯子开始。</span></div>
             <div class="furniture-shop" id="furniture-shop"></div>
           </section>
@@ -89,26 +93,27 @@
               <article class="game-card fishing-card"><div class="card-art fishing-art"><svg><use href="#i-moon"/></svg><span class="pond-ripple"></span><span class="fishing-float"></span></div><span class="eyebrow">03 / TIMING</span><h3>月光钓鱼</h3><p>等浮标进入金色区域，一次果断收竿。五次机会，稳稳来。</p><div class="game-meta"><span>20 秒 · 时机挑战</span><b id="best-fishing">最佳 0</b></div><button class="button green" data-game="fishing">开始挑战 <svg><use href="#i-arrow"/></svg></button></article>
             </div>
           </section>
-          <section class="journal-section" aria-labelledby="journal-title"><div class="journal-heading"><svg><use href="#i-book"/></svg><h2 id="journal-title">刚刚发生的小幸福</h2></div><ol id="journal-list"><li>欢迎回家，团团已经准备好认识你们了。</li></ol></section>
+          <details class="journal-section"><summary id="journal-title"><svg><use href="#i-book"/></svg>刚刚发生的小幸福</summary><ol id="journal-list"><li>欢迎回家，团团已经准备好认识你们了。</li></ol></details>
         </div>
         <aside class="sidebar">
-          <section class="daily-section" aria-labelledby="daily-title"><h2 id="daily-title"><svg><use href="#i-check"/></svg>今天的小约定</h2><p class="daily-note">一点点照顾，就会有一点点奖励。</p><div id="daily-tasks"></div><div class="level-progress"><span id="xp-label">再攒 40 点陪伴，升到下一级</span><progress id="xp-bar" max="40" value="0" aria-label="等级经验"></progress></div></section>
-          <section class="milestones"><h2><svg><use href="#i-gift"/></svg>我们的冒险手册</h2><p id="next-goal">给小日子一个新的目标。</p><div id="achievements"></div></section>
+          <details class="daily-section" open><summary id="daily-title"><span>今天的小约定</span><b id="daily-summary">0 / 5</b></summary><p class="daily-note">完成后点「领金币」，奖励才会入账。</p><div id="daily-tasks"></div><div class="level-progress"><span id="xp-label">再攒 40 点陪伴，升到下一级</span><progress id="xp-bar" max="40" value="0" aria-label="等级经验"></progress></div></details>
+          <details class="milestones"><summary>我们的冒险手册</summary><p id="next-goal">给小日子一个新的目标。</p><div id="achievements"></div></details>
           <div class="love-note"><svg><use href="#i-heart"/></svg><p>今天也把心意送给你。</p><small id="daily-love">今天也想偏爱你一点。</small><button class="button paper wide" id="send-gift"><svg><use href="#i-gift"/></svg>送出今天的小心意</button><small id="gift-status">两个人，各有一份专属心意。</small></div>
-          <section class="shared-section"><h2><svg><use href="#i-cloud"/></svg>我们的云端小家</h2><p id="sync-help">连接同一个房间码，就能在两台手机一起玩。</p><button class="button cloud-button" id="open-cloud"><svg><use href="#i-cloud"/></svg><span id="cloud-button-label">连接我们的云端小家</span></button><div class="actor-select"><label for="actor">这台手机属于</label><select id="actor"><option value="heok">廖炫旭</option><option value="xy">陈欣怡</option></select></div><p class="save-status" id="save-status" role="status">本机进度会自动保存</p></section>
+          <details class="shared-section"><summary>更多 · 云端与身份</summary><p id="sync-help">连接同一个房间码，就能在两台手机一起玩。</p><button class="button cloud-button" id="open-cloud"><svg><use href="#i-cloud"/></svg><span id="cloud-button-label">连接我们的云端小家</span></button><div class="actor-select"><label for="actor">这台手机属于</label><select id="actor"><option value="heok">廖炫旭</option><option value="xy">陈欣怡</option></select></div><p class="save-status" id="save-status" role="status">本机进度会自动保存</p></details>
           <div class="utility-actions"><button id="open-guide">怎么玩？</button><button id="open-save">管理存档</button></div>
         </aside>
       </div>
     </main>
     <footer><p id="anniversary-label">在一起第 273 天 · 从 2026.01.01 开始</p><p>你和我，就是这个世界的全部玩家。</p></footer>
   </div>
-  <dialog id="arcade-dialog" aria-labelledby="arcade-title" class="arcade-dialog"><button class="dialog-close" id="close-arcade" aria-label="退出小游戏"><svg><use href="#i-close"/></svg></button><span class="eyebrow">JUST YOU &amp; ME</span><h2 id="arcade-title">接住小心意</h2><p id="arcade-instructions"></p><div class="arcade-hud"><span>剩余 <b id="game-time">20</b> 秒</span><span>得分 <b id="game-score">0</b></span><span id="game-combo">准备好了吗？</span></div><div id="game-board" class="game-board" tabindex="0" role="group" aria-label="小游戏操作区域"></div><div class="game-controls" id="game-controls"></div><section id="game-exit-confirm" class="game-exit-confirm" hidden aria-label="退出本局确认"><svg><use href="#i-home"/></svg><h3>要先回家吗？</h3><p>退出这一局不领奖。<br>已经赚到的金币和小家进度不会改变。<br>确认期间，关卡仍会继续计时。</p><button class="button green" id="cancel-game-exit">继续这一局</button><button class="button paper" id="confirm-game-exit">确认退出，不领奖</button></section><div id="game-result" class="game-result" hidden><span id="game-stars" aria-hidden="true"></span><h3 id="game-result-title">每一份心意，都值得接住。</h3><p id="game-result-detail" role="status"></p><button class="button green" id="game-again">再玩一局</button><button class="button paper" id="game-done">回到我们的小世界</button></div><p class="small-print" id="game-save-status" role="status"></p></dialog>
+  <dialog id="arcade-dialog" aria-labelledby="arcade-title" class="arcade-dialog"><button class="dialog-close" id="close-arcade" aria-label="退出小游戏"><svg><use href="#i-close"/></svg></button><span class="eyebrow">JUST YOU &amp; ME</span><h2 id="arcade-title">接住小心意</h2><p id="arcade-instructions"></p><section id="game-ready" class="game-ready" hidden><h3 id="game-ready-title">先看懂，再开始</h3><p id="game-ready-copy"></p><button id="begin-game" class="button green">准备好了，开始</button><p class="small-print">点开始才创建关卡并计时。今天前五次结算有奖励，零分也占一次。</p></section><progress id="game-progress" max="100" value="0" aria-label="本局时间进度"></progress><span id="game-attempts" aria-live="polite"></span><div class="arcade-hud"><span>剩余 <b id="game-time">20</b> 秒</span><span>得分 <b id="game-score">0</b></span><span id="game-combo">准备好了吗？</span></div><div id="game-board" class="game-board" tabindex="0" role="group" aria-label="小游戏操作区域"></div><div class="game-controls" id="game-controls"></div><section id="game-exit-confirm" class="game-exit-confirm" hidden aria-label="退出本局确认"><svg><use href="#i-home"/></svg><h3>要先回家吗？</h3><p>退出这一局不领奖。<br>已经赚到的金币和小家进度不会改变。<br>确认期间，关卡仍会继续计时。</p><button class="button green" id="cancel-game-exit">继续这一局</button><button class="button paper" id="confirm-game-exit">确认退出，不领奖</button></section><div id="game-result" class="game-result" hidden><span id="game-stars" aria-hidden="true"></span><h3 id="game-result-title">每一份心意，都值得接住。</h3><p id="game-result-detail" role="status"></p><button class="button green" id="game-again">再玩一局</button><button class="button paper" id="game-done">回到我们的小世界</button></div><p class="small-print" id="game-save-status" role="status"></p></dialog>
   <dialog id="cloud-dialog" aria-labelledby="cloud-title"><button class="dialog-close" data-close="cloud-dialog" aria-label="关闭云端连接"><svg><use href="#i-close"/></svg></button><h2 id="cloud-title">让我们住进同一个小世界</h2><p>一人创建小家，把房间码私下发给另一人。另一台手机输入同一个码，进度就能共享。</p><div class="cloud-connected" id="cloud-connected" hidden><label for="current-code">你们的房间码（只发给彼此）</label><input id="current-code" readonly autocomplete="off" spellcheck="false"><button class="button green" id="copy-room">复制房间码</button><button class="text-button" id="leave-room">切回本地试玩</button></div><div id="cloud-setup"><button class="button green wide" id="create-room">创建我们的新小家</button><p class="separator">或者，加入已经创建的小家</p><form id="join-form"><label for="join-code">房间码</label><input id="join-code" placeholder="粘贴对方发来的 32 位房间码" minlength="32" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false" required><button class="button paper wide" type="submit">加入这个小家</button></form><p class="small-print">云端小家从全新的进度开始；本地试玩存档会保留。断网时暂停云端操作，避免覆盖彼此的进度。</p></div><p class="dialog-status" id="cloud-status" role="status"></p></dialog>
   <dialog id="name-dialog" aria-labelledby="name-title"><button class="dialog-close" data-close="name-dialog" aria-label="关闭取名"><svg><use href="#i-close"/></svg></button><h2 id="name-title">给小猫取个名字</h2><form id="name-form"><label for="new-pet-name">你们想怎么叫它？</label><input id="new-pet-name" maxlength="12" autocomplete="off" required><button class="button green" type="submit">就叫这个名字</button></form><p class="dialog-status" id="name-status" role="status"></p></dialog>
   <dialog id="guide-dialog" aria-labelledby="guide-title"><button class="dialog-close" data-close="guide-dialog" aria-label="关闭玩法说明"><svg><use href="#i-close"/></svg></button><h2 id="guide-title">我们的慢慢来指南</h2><ol class="guide-list"><li><b>照顾小猫</b><p>喂食花 6 金币；玩耍消耗精力；睡一觉补充精力。连点时它会休息几秒，不会生病或离开。</p></li><li><b>经营菜园</b><p>先选种子，再点空地。胡萝卜 20 秒、草莓 45 秒、向日葵 90 秒成熟；浇一次水会缩短剩余时间。成熟后点击收获，赚取金币和陪伴经验。</p></li><li><b>布置小家</b><p>购买家具后点「摆放」，再点场景里的位置。拖动已摆好的家具，或选中后用方向键移动。收回的家具仍属于你们。</p></li><li><b>一起完成小约定</b><p>达到目标后领取金币。每日按马来西亚时间刷新，两个人都参与可以额外领奖。</p></li><li><b>真正动手的三个挑战</b><p>游乐场里，20 秒接礼物、60 秒翻牌配对、20 秒看准时机钓鱼。各有计时、分数和最佳纪录。每人每日前五次结算有奖励，零分也占一次；之后仍可练习。退出不领奖，切后台不暂停。</p></li><li><b>订单、羁绊与心意</b><p>收获照常赚金币，也收入作物仓库。交付每日订单得额外奖励；照顾、游戏和赠礼累积亲密度，达成成就后点亮永久徽章。双方各可每天送一次心意。</p></li><li><b>两台手机共享</b><p>连接同一个私密房间码，选好各自名字。操作同步给对方；短暂断网时会暂停，恢复后重新读取共享进度。</p></li></ol><button class="button green wide" data-close="guide-dialog">知道啦，开始过小日子</button></dialog>
   <dialog id="save-dialog" aria-labelledby="save-title"><button class="dialog-close" data-close="save-dialog" aria-label="关闭存档管理"><svg><use href="#i-close"/></svg></button><h2 id="save-title">把我们的进度好好收起来</h2><p>本地试玩会自动保存到这台设备。导出一个备份文件，可以把本地进度搬到另一台设备。</p><button class="button green wide" id="export-save">导出本地存档</button><label class="button paper wide file-label">选择本地备份文件<input type="file" id="import-file" accept="application/json,.json" hidden></label><p id="import-summary" hidden></p><button class="button rose wide" id="confirm-import" hidden>确认恢复这份备份</button><p class="small-print">导入只替换本地试玩存档，不改动云端小家。保留房间码即可重新进入云端；请勿把房间码放进公开仓库。</p><p class="dialog-status" id="save-dialog-status" role="status"></p></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript><p class="noscript">请启用 JavaScript，让团团和菜园陪你一起运行。</p></noscript>
-  <script type="module" src="./app.js?v=2.2"></script>
+  <script type="module" src="./app.js?v=3"></script>
 </body>
 </html>
+
