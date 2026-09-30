@@ -22,6 +22,8 @@ export class ArcadeController {
     $('close-arcade').addEventListener('click', () => this.exit());
     $('game-done').addEventListener('click', () => this.exit());
     $('game-again').addEventListener('click', () => this.start(this.game));
+    $('cancel-game-exit').addEventListener('click', () => { this.exitPrompt(false); $('game-board').focus(); });
+    $('confirm-game-exit').addEventListener('click', () => this.leave());
     $('arcade-dialog').addEventListener('cancel', event => { event.preventDefault(); this.exit(); });
     $('arcade-dialog').addEventListener('close', () => this.stop());
     $('arcade-dialog').addEventListener('keydown', event => this.keyboard(event));
@@ -41,13 +43,24 @@ export class ArcadeController {
 
   exit() {
     if (this.starting || this.finishing) { $('game-save-status').textContent = '请等服务器确认这一局，再关闭。'; return; }
-    if (this.running && !window.confirm('退出这一局？本局不领奖，已有的小家进度不会改变。')) return;
-    this.stop(); $('arcade-dialog').close();
+    if (this.running) { this.exitPrompt(true); $('cancel-game-exit').focus(); return; }
+    this.leave();
+  }
+
+  leave() {
+    if (this.starting || this.finishing) return;
+    this.exitPrompt(false); this.stop(); $('arcade-dialog').close();
+  }
+
+  exitPrompt(show) {
+    $('game-exit-confirm').hidden = !show;
+    $('game-board').inert = show; $('game-controls').inert = show;
   }
 
   async start(game) {
     if (this.starting || this.finishing || this.running) return;
     this.stop(); this.game = game; this.starting = true; this.owner = this.getActor();
+    this.exitPrompt(false);
     $('arcade-title').textContent = GAME_NAMES[game]; $('game-result').hidden = true;
     $('game-save-status').textContent = '正在准备你们的专属关卡……';
     $('game-board').replaceChildren(); $('game-controls').replaceChildren();
@@ -163,7 +176,7 @@ export class ArcadeController {
   }
 
   keyboard(event) {
-    if (!this.running || this.finishing || this.game === 'memory' || event.repeat) return;
+    if (!this.running || this.finishing || !$('game-exit-confirm').hidden || this.game === 'memory' || event.repeat) return;
     if (this.game === 'catch') {
       if (['1', '2', '3'].includes(event.key)) { event.preventDefault(); this.catchGift(Number(event.key) - 1); }
       else if (['ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); this.lane = Math.max(0, Math.min(2, this.lane + (event.key === 'ArrowRight' ? 1 : -1))); this.kitten.style.left = `${(this.lane + .5) / 3 * 100}%`; }
@@ -192,6 +205,7 @@ export class ArcadeController {
   async finish() {
     if (!this.running || this.finishing) return;
     this.finishing = true; cancelAnimationFrame(this.frame);
+    this.exitPrompt(false);
     $('close-arcade').disabled = true; $('game-controls').querySelectorAll('button').forEach(button => button.disabled = true);
     $('game-save-status').textContent = '这一局结束了，正在安全结算……';
     $('game-result').hidden = false; $('game-result-detail').textContent = '请等服务器确认奖励。';
