@@ -3,6 +3,7 @@ import { cloudConfig } from './config.js';
 import { WorldClient } from './client.js';
 import { ArcadeController } from './arcade.js?v=3';
 import { playSound, toggleSound, soundEnabled } from './sound.js';
+import { RetreatController } from './retreat.js?v=4';
 
 const $ = id => document.getElementById(id);
 const names = { heok: '廖炫旭', xy: '陈欣怡' };
@@ -39,7 +40,7 @@ function node(tag, className, text) {
   return el;
 }
 function sprite(kind, id) { const el = node('span', `${kind}-sprite ${id}`); el.dataset[kind === 'plant' ? 'crop' : 'item'] = id; el.setAttribute('aria-hidden', 'true'); return el; }
-function toast(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 3500); }
+function toast(message) { $('toast').textContent = message; if ($('retreat-dialog').open) $('retreat-notice').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 3500); }
 function statusText(id, text) { if ($(id).textContent !== text) $(id).textContent = text; }
 function dialog(id) { $(id).showModal(); document.documentElement.style.overflow = 'hidden'; }
 document.querySelectorAll('dialog').forEach(el => el.addEventListener('close', () => { document.documentElement.style.overflow = ''; }));
@@ -190,6 +191,10 @@ function celebrate() {
   document.body.append(burst); setTimeout(() => burst.remove(), 1600);
 }
 const arcade = new ArcadeController({ act: action, getWorld: world, getActor: () => actor, open: () => dialog('arcade-dialog'), feedback: playSound, isShared: () => !!code });
+const retreat = new RetreatController({ act: action, getWorld: world, getTime: now, isLocked: () => busy || !!client.pending || !!code && !online, isShared: () => !!code });
+$('open-retreat').addEventListener('click', () => retreat.open());
+window.addEventListener('pagehide', () => retreat.view?.setActive(false));
+window.addEventListener('pageshow', () => retreat.view?.setActive($('retreat-dialog').open));
 document.querySelectorAll('[data-game]').forEach(button => button.addEventListener('click', () => arcade.prepare(button.dataset.game)));
 const inventoryNodes = CATALOG.crops.map(crop => {
   const el = node('div'), count = node('b'); el.append(sprite('plant', crop.id), node('span', '', crop.name), count); $('inventory').append(el); return count;
@@ -236,6 +241,7 @@ function render() {
   document.querySelectorAll('[data-theme]').forEach(button => { button.disabled = locked; button.setAttribute('aria-pressed', String(button.dataset.theme === adventure.theme)); });
   $('home-scene').dataset.theme = adventure.theme;
   homeView?.update(state);
+  retreat.update();
   $('actor').disabled = busy || arcade.running;
   $('coins').textContent = state.coins; $('level').textContent = `Lv. ${getLevel(state)}`;
   $('pet-name').textContent = state.pet.name; $('tab-pet').querySelector('span').textContent = '小猫'; $('tab-pet').setAttribute('aria-label', `${state.pet.name}的小窝`);
@@ -367,6 +373,7 @@ for (const [name, columns, rows, variable] of [['pet-sprites', 3, 1, 'pet'], ['f
   const image = new Image(); image.onload = () => document.documentElement.style.setProperty(`--${variable}-ratio`, image.naturalWidth / columns / (image.naturalHeight / rows)); image.onerror = () => toast('部分插画加载失败，请检查网络后刷新。'); image.src = `./assets/${name}.png`;
 }
 render();
+if (location.hash === '#retreat') retreat.open();
 if (!storageOK) toast('原存档未被覆盖。请检查浏览器存储，或导入备份。');
 if (/^[a-f0-9]{32}$/.test(savedCode) && cloudConfig.apiBase) connect(savedCode);
 setInterval(() => { if (!document.hidden) render(); }, 1000);

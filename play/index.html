@@ -9,6 +9,7 @@
   <title>我们的小日子 · 廖炫旭与陈欣怡</title>
   <link rel="stylesheet" href="./styles.css?v=3">
   <link rel="stylesheet" href="./experience.css?v=3">
+  <link rel="stylesheet" href="./retreat.css?v=4">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js"}}</script>
 </head>
 <body>
@@ -36,7 +37,7 @@
     </header>
     <main>
       <section class="welcome" aria-labelledby="welcome-title">
-        <div><h1 id="welcome-title">把今天，也住进回忆里。</h1><p>照顾团团，种点期待，再一起玩一局。</p></div>
+        <div><h1 id="welcome-title">把今天，也住进回忆里。</h1><p>照顾团团，种点期待，再一起玩一局。</p><button id="open-retreat" class="retreat-entry">进入 3D 世界 <small>湖畔小屋 · 行走与互动</small></button></div>
         <div class="welcome-note"><svg><use href="#i-heart"/></svg><span>不用很厉害，<br>一起慢慢来就好。</span></div>
       </section>
       <div class="world-toolbar">
@@ -113,7 +114,24 @@
   <dialog id="save-dialog" aria-labelledby="save-title"><button class="dialog-close" data-close="save-dialog" aria-label="关闭存档管理"><svg><use href="#i-close"/></svg></button><h2 id="save-title">把我们的进度好好收起来</h2><p>本地试玩会自动保存到这台设备。导出一个备份文件，可以把本地进度搬到另一台设备。</p><button class="button green wide" id="export-save">导出本地存档</button><label class="button paper wide file-label">选择本地备份文件<input type="file" id="import-file" accept="application/json,.json" hidden></label><p id="import-summary" hidden></p><button class="button rose wide" id="confirm-import" hidden>确认恢复这份备份</button><p class="small-print">导入只替换本地试玩存档，不改动云端小家。保留房间码即可重新进入云端；请勿把房间码放进公开仓库。</p><p class="dialog-status" id="save-dialog-status" role="status"></p></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript><p class="noscript">请启用 JavaScript，让团团和菜园陪你一起运行。</p></noscript>
-  <script type="module" src="./app.js?v=3"></script>
+  <dialog id="retreat-dialog" class="retreat-dialog" aria-labelledby="retreat-title">
+    <div class="retreat-stage">
+      <div id="retreat-canvas" class="retreat-canvas"></div>
+      <header class="retreat-header"><div><h2 id="retreat-title">湖畔日常</h2><p>廖炫旭 &amp; 陈欣怡 · <span id="retreat-world-status">本地试玩</span></p></div><button id="retreat-close">返回日常</button></header>
+      <aside class="retreat-mission"><h3>今日行程</h3><p id="retreat-mission-pet">待体验 · 照顾猫咪</p><p id="retreat-mission-farm">待体验 · 种植与收获</p><p id="retreat-mission-fetch">待体验 · 六球挑战</p><small>体验清单，不额外发奖励。</small></aside>
+      <p id="retreat-context" class="retreat-context">靠近猫咪或菜地，按 E 互动</p>
+      <div class="retreat-dpad" role="group" aria-label="3D行走方向"><button data-retreat-dir="0,-1" aria-label="向前走"><svg><use href="#i-arrow" transform="rotate(-90 12 12)"/></svg></button><button data-retreat-dir="-1,0" aria-label="向左走"><svg><use href="#i-arrow" transform="rotate(180 12 12)"/></svg></button><button data-retreat-dir="0,1" aria-label="向后走"><svg><use href="#i-arrow" transform="rotate(90 12 12)"/></svg></button><button data-retreat-dir="1,0" aria-label="向右走"><svg><use href="#i-arrow"/></svg></button></div>
+      <div class="retreat-shortcuts"><button id="retreat-interact">互动 E</button><button id="retreat-turn">视角</button></div>
+      <section class="retreat-panel" data-retreat-panel="pet" hidden><h3>陪猫咪待一会</h3><p id="retreat-pet-stats"></p><div class="retreat-stack"><button data-retreat-care="feed">喂食 · 6 币</button><button data-retreat-care="play">陪玩</button><button data-retreat-care="rest">休息</button></div><h3>六球挑战</h3><p>看准绿区抛球，让猫咪追住落点。六次机会，45 秒；每球目标不同，难度逐渐增加。</p><div class="retreat-throw-stats"><span id="retreat-fetch-score">本机最佳 0 分</span><span id="retreat-fetch-time">45s</span></div><div id="retreat-fetch-meter" hidden><div class="retreat-throw-meter"><span id="retreat-throw-target" class="retreat-throw-target"></span><span id="retreat-throw-needle" class="retreat-throw-needle"></span></div></div><button id="retreat-fetch-start" class="retreat-primary">开始六球挑战</button><button id="retreat-fetch-throw" class="retreat-primary" hidden>抛球 · 空格</button><p>练习纪录仅存本机，不发金币。</p></section>
+      <section class="retreat-panel" data-retreat-panel="farm" hidden><h3>六块地，慢慢经营</h3><label for="retreat-seed">选择种子</label><select id="retreat-seed"></select><p>点编号走到对应菜地，再种植、浇水或收获。作物与原菜园同步。</p><div class="retreat-stack" aria-label="选择3D菜地"><button data-retreat-plot="0">1</button><button data-retreat-plot="1">2</button><button data-retreat-plot="2">3</button><button data-retreat-plot="3">4</button><button data-retreat-plot="4">5</button><button data-retreat-plot="5">6</button></div><p id="retreat-crop-status"></p><button id="retreat-plant" class="retreat-primary">走近菜地</button></section>
+      <section class="retreat-panel" data-retreat-panel="build" hidden><h3>让小屋属于我们</h3><label for="retreat-furniture">选择家具</label><select id="retreat-furniture"></select><p>购买使用原来的金币。选中后点击小屋室内地面摆放；同一份位置也会显示在原来的小家。</p><button id="retreat-buy" class="retreat-primary">选中并摆放</button><div class="retreat-stack"><button id="retreat-remove">收回这件家具</button></div></section>
+      <section class="retreat-panel" data-retreat-panel="light" hidden><h3>窗外的时光</h3><div class="retreat-stack"><button data-retreat-theme="morning">晨光</button><button data-retreat-theme="sunset">落日</button><button data-retreat-theme="night">月夜</button></div><p>主题与两个人的共享小家同步，不扣金币。</p><button id="retreat-reset">回到石径</button></section>
+      <div class="retreat-loading" id="retreat-loading"><h3>走进湖畔日常</h3><p id="retreat-load-status">正在加载原创 3D 场景。</p><button id="retreat-retry" hidden>重新加载</button><button id="retreat-back">返回原游戏</button></div>
+    </div>
+    <nav class="retreat-dock" aria-label="3D玩法"><button data-retreat-mode="roam" aria-pressed="true">漫游</button><button data-retreat-mode="pet" aria-pressed="false">逗猫</button><button data-retreat-mode="farm" aria-pressed="false">种植</button><button data-retreat-mode="build" aria-pressed="false">布置</button><button data-retreat-mode="light" aria-pressed="false">光线</button></nav>
+    <p id="retreat-notice" role="status" class="retreat-notice"></p><p id="retreat-persistence" class="retreat-persistence"></p>
+  </dialog>
+  <script type="module" src="./app.js?v=4"></script>
 </body>
 </html>
 

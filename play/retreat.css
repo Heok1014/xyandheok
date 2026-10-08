@@ -1,0 +1,73 @@
+.retreat-entry { margin-top: 15px; display: inline-flex; align-items: center; gap: 14px; background: #293932; color: #f3f0e7; border: 1px solid #69776b; padding: 12px 20px; border-radius: 4px; font-size: 15px; font-weight: 600; }
+.retreat-entry small { font-size: 11px; color: #bdc7bb; font-weight: 400; }
+.retreat-dialog { --retreat-ink: #eeeade; --retreat-surface: rgba(24,31,27,.92); --retreat-accent: #d5a16c; position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: #202b27; color: var(--retreat-ink); overflow: hidden; }
+.retreat-dialog::backdrop { background: #202b27; }
+.retreat-dialog button, .retreat-dialog select { font-family: 'Palatino Linotype', 'Noto Serif SC', 'Microsoft YaHei', serif; font-size: 14px; color: var(--retreat-ink); min-height: 44px; padding: 10px 14px; border: 1px solid #82908466; background: var(--retreat-surface); border-radius: 4px; cursor: pointer; }
+.retreat-dialog button:hover { border-color: var(--retreat-accent); }
+.retreat-dialog button:focus-visible, .retreat-dialog select:focus-visible, .retreat-canvas canvas:focus-visible { outline: 2px solid #f5c38e; outline-offset: -3px; }
+.retreat-dialog button:disabled { opacity: .45; cursor: default; }
+.retreat-dialog [hidden] { display: none !important; }
+.retreat-stage { position: relative; height: calc(100% - 68px - env(safe-area-inset-bottom)); }
+.retreat-canvas { position: absolute; inset: 0; }
+.retreat-canvas canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.retreat-header { position: absolute; z-index: 2; left: 30px; right: 30px; top: max(20px, env(safe-area-inset-top)); display: flex; align-items: flex-start; justify-content: space-between; pointer-events: none; }
+.retreat-header > * { pointer-events: auto; }
+.retreat-header h2 { color: #f4eedf; font-size: 38px; font-weight: 400; margin: 0; text-shadow: 0 2px 12px #14231e; letter-spacing: .13em; }
+.retreat-header p { margin: 5px 0 0; font-size: 13px; text-shadow: 0 2px 7px #14231e; }
+.retreat-header button { background: rgba(24,31,27,.88); }
+.retreat-mission { position: absolute; z-index: 2; top: 116px; left: 30px; padding: 16px 20px; width: 210px; background: var(--retreat-surface); border: 1px solid #b9b4a455; border-radius: 4px; }
+.retreat-mission h3 { font-size: 17px; color: var(--retreat-accent); margin: 0 0 9px; padding-bottom: 10px; border-bottom: 1px solid #bea68d66; font-weight: 400; }
+.retreat-mission p { margin: 7px 0; font-size: 13px; }
+.retreat-mission small { display: block; color: #b7c1b5; font-size: 11px; margin-top: 12px; }
+.retreat-context { position: absolute; z-index: 2; bottom: 20px; left: 50%; transform: translateX(-50%); max-width: 45%; margin: 0; background: var(--retreat-surface); border: 1px solid #b9b4a455; border-radius: 4px; padding: 12px 18px; text-align: center; font-size: 14px; }
+.retreat-dpad { position: absolute; z-index: 3; bottom: 20px; left: 30px; display: grid; grid-template-columns: repeat(3, 48px); gap: 6px; }
+.retreat-dpad button { padding: 0; width: 48px; height: 48px; touch-action: none; }
+.retreat-dpad svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.retreat-dpad button:first-child { grid-column: 2; }
+.retreat-dpad button:nth-child(2) { grid-column: 1; }
+.retreat-shortcuts { position: absolute; z-index: 3; bottom: 20px; right: 30px; display: flex; gap: 8px; }
+.retreat-dock { height: 68px; padding: 8px 20px calc(8px + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: center; gap: 8px; background: #202825; border-top: 1px solid #72796c88; }
+.retreat-dock button { border: 0; background: none; min-width: 90px; border-radius: 0; color: #bac1b7; }
+.retreat-dock button[aria-pressed='true'] { color: var(--retreat-accent); box-shadow: inset 0 -2px var(--retreat-accent); }
+.retreat-panel { position: absolute; z-index: 4; right: 30px; top: 100px; width: 310px; max-height: calc(100% - 230px); overflow: auto; padding: 20px; border: 1px solid #b9b4a455; border-radius: 4px; background: var(--retreat-surface); }
+.retreat-panel h3 { color: #f2e9d6; font-size: 21px; margin: 0 0 10px; font-weight: 400; }
+.retreat-panel p { font-size: 13px; line-height: 1.7; color: #c7cdbf; margin: 9px 0; }
+.retreat-panel .retreat-stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.retreat-panel .retreat-stack button { flex: 1; }
+.retreat-panel label { display: block; margin: 8px 0 5px; font-size: 13px; }
+.retreat-panel select { width: 100%; background: #25302b; }
+.retreat-panel .retreat-primary { width: 100%; background: #b88a5d; color: #121e17; font-weight: 600; border-color: #ddb893; }
+.retreat-panel progress { width: 100%; height: 9px; accent-color: #d6a16c; margin: 10px 0; }
+.retreat-throw-meter { position: relative; margin: 20px 0 10px; height: 18px; border-radius: 3px; background: #111a17; overflow: hidden; }
+.retreat-throw-target { position: absolute; height: 100%; background: #547659; }
+.retreat-throw-needle { position: absolute; top: 0; height: 100%; width: 3px; background: #ffe9b2; }
+.retreat-throw-stats { display: flex; justify-content: space-between; color: #d5a16c; font-size: 13px; }
+.retreat-loading { position: absolute; z-index: 5; inset: 0; display: grid; align-content: center; justify-content: center; text-align: center; background: #202b27; padding: 30px; }
+.retreat-loading h3 { font-weight: 400; font-size: 30px; margin-bottom: 12px; color: #e6ddc8; }
+.retreat-loading p { max-width: 440px; font-size: 14px; line-height: 1.8; }
+.retreat-notice { position: absolute; z-index: 6; bottom: calc(140px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); max-width: 50%; margin: 0; padding: 8px 12px; border-radius: 4px; background: rgba(24,31,27,.94); font-size: 12px; text-align: center; pointer-events: none; }
+.retreat-notice:empty { display: none; }
+.retreat-persistence { position: absolute; z-index: 2; left: 30px; top: 320px; max-width: 210px; font-size: 10px; line-height: 1.7; color: #d3d7c7; text-shadow: 0 1px 5px #17251b; pointer-events: none; }
+@media (max-width: 640px) {
+  .retreat-entry { width: 100%; justify-content: space-between; }
+  .retreat-header { left: 15px; right: 15px; top: max(12px, env(safe-area-inset-top)); }
+  .retreat-header h2 { font-size: 26px; }
+  .retreat-header p { font-size: 10px; max-width: 155px; }
+  .retreat-header button { font-size: 12px; padding: 9px 12px; }
+  .retreat-mission { top: 90px; left: 15px; padding: 10px 12px; width: 148px; }
+  .retreat-mission h3 { font-size: 14px; padding-bottom: 6px; margin-bottom: 6px; }
+  .retreat-mission p { font-size: 11px; margin: 5px 0; }
+  .retreat-mission small { font-size: 10px; margin-top: 8px; }
+  .retreat-dpad { left: 15px; bottom: 16px; grid-template-columns: repeat(3, 44px); gap: 4px; }
+  .retreat-dpad button { width: 44px; height: 44px; }
+  .retreat-shortcuts { right: 15px; bottom: 16px; flex-direction: column; gap: 4px; }
+  .retreat-context { bottom: 122px; max-width: calc(100% - 30px); width: max-content; font-size: 11px; padding: 9px 12px; }
+  .retreat-panel { top: auto; bottom: 121px; right: 15px; left: 15px; width: auto; max-height: 48%; padding: 16px; }
+  .retreat-stage:has(.retreat-panel:not([hidden])) .retreat-context, .retreat-stage:has(.retreat-panel:not([hidden])) .retreat-mission { display: none; }
+  .retreat-dock { gap: 0; padding-left: 4px; padding-right: 4px; }
+  .retreat-dock button { min-width: 0; flex: 1; padding: 10px 5px; font-size: 13px; }
+  .retreat-dialog button, .retreat-dialog select { min-height: 44px; }
+  .retreat-notice { bottom: calc(73px + env(safe-area-inset-bottom)); max-width: calc(100% - 32px); width: max-content; font-size: 11px; padding: 6px 10px; }
+  .retreat-persistence { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .retreat-dialog * { scroll-behavior: auto; } }
